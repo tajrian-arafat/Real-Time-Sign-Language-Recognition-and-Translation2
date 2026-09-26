@@ -7,3 +7,7 @@ numpy>=1.26
 torch>=2.2
 onnxruntime>=1.17
 pytest>=8.0
+transformers>=4.40
+sentencepiece>=0.2
+protobuf>=4.25
+normalizer @ git+https://github.com/csebuetnlp/normalizer
