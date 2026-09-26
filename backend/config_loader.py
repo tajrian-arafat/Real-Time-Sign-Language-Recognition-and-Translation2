@@ -91,7 +91,8 @@ def resolve_onnx_model_path(config: dict[str, Any]) -> Path:
 def resolve_label_map_path(config: dict[str, Any], onnx_path: Path) -> Path:
     inference = config.get("inference", {})
     models_dir = resolve_models_dir(config)
-    stub_map = models_dir / inference.get("stub_label_map", "stub/label_map.json")
+    stub_rel = inference.get("stub_label_map", "../config/stub_label_map.json")
+    stub_map = (models_dir / stub_rel).resolve()
     if stub_map.is_file() and "stub" in onnx_path.parts:
         return stub_map
     sibling = onnx_path.parent / "label_map.json"
