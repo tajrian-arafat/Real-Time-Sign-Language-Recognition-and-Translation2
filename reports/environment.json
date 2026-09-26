@@ -1,0 +1,24 @@
+{
+  "platform": "Linux-6.12.94+-x86_64-with-glibc2.39",
+  "python_version": "3.11.16",
+  "python_executable": "/workspace/.venv/bin/python",
+  "cpu_cores_logical": 4,
+  "ram_total_gb": 15.64,
+  "disk_free_gb_workspace": 230.93,
+  "gpu": {
+    "present": false,
+    "devices": [],
+    "torch_version": "2.14.0+cu130",
+    "note": "torch.cuda.is_available() is False"
+  },
+  "node_version": "v22.14.0",
+  "recommended_training": {
+    "device": "cpu",
+    "batch_size": 128,
+    "num_workers": 3
+  },
+  "verification": {
+    "python_version_cli": "Python 3.11.16",
+    "node_version_cli": "v22.14.0"
+  }
+}

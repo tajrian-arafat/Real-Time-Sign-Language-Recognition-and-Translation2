@@ -1,0 +1,115 @@
+# Single source of truth for paths, hyperparameters, and thresholds.
+# Override paths with environment variables where noted.
+
+paths:
+  # Windows default (documented for local dev). Override with SIGN_LANGUAGE_DATA_ROOT.
+  # Cloud VM: set SIGN_LANGUAGE_DATA_ROOT or leave unset to use repo-relative data_root below.
+  data_root: "D:\\PROJECTS\\sign language"
+  data_root_env_var: SIGN_LANGUAGE_DATA_ROOT
+  # Resolved at runtime: ${SIGN_LANGUAGE_DATA_ROOT:-<repo>/data} when env is set on cloud use /workspace/data
+  repo_relative_data_root: "data"
+  raw_dir: "raw"
+  processed_dir: "processed"
+  models_dir: "models"
+  reports_dir: "reports"
+  bangla_dictionary_filename: "bangla_dictionary.json"
+  label_map_filename: "label_map.json"
+
+datasets:
+  kaggle_competition: "asl-signs"
+  kaggle_raw_subdir: "kaggle_asl_signs"
+  asl_citizen_raw_subdir: "asl_citizen"
+  vocabulary:
+    kaggle_baseline_words: 250
+    extended_target_min: 450
+    extended_target_max: 520
+  splits:
+    train_ratio: 0.8
+    val_ratio: 0.1
+    test_ratio: 0.1
+  class_balance:
+    oversample_floor: 15
+    drop_below: 5
+
+landmarks:
+  sequence_length_T: 64
+  input_dim_per_frame: 392
+  # Exact MediaPipe index lists to be filled by Agent 3; keys reserved here.
+  hand_landmark_indices: []
+  pose_landmark_indices: []
+  face_landmark_indices: []
+  normalization:
+    origin: shoulder_midpoint
+    scale: shoulder_width
+
+model:
+  architecture: conv1d_transformer
+  conv1d_kernel: 3
+  conv1d_layers: 2
+  conv_channels: 256
+  d_model: 256
+  nhead: 4
+  num_encoder_layers: 4
+  dim_feedforward: 512
+  dropout: 0.1
+
+training:
+  batch_size: 128
+  batch_size_low_memory: 32
+  max_epochs: 60
+  early_stopping_patience: 8
+  optimizer: AdamW
+  weight_decay: 0.01
+  label_smoothing: 0.1
+  base_lr: 3.0e-4
+  base_lr_batch_size: 128
+  lr_warmup_ratio: 0.05
+  lr_schedule: cosine
+  num_workers: 3
+  mixed_precision_when_cuda: true
+  resume_on_oom:
+    reduce_batch: true
+    log_adjustment: true
+
+augmentation:
+  horizontal_mirror: true
+  temporal_speed_jitter_ratio: 0.15
+  coordinate_jitter_sigma: 0.01
+
+inference:
+  confidence_threshold: 0.60
+  temporal_ema_windows: 3
+  debounce_cooldown_ms: 800
+  sliding_window_seconds_min: 1.0
+  sliding_window_seconds_max: 1.5
+  sliding_window_overlap: 0.5
+  onnx_runtime_providers:
+    - CPUExecutionProvider
+
+sentence:
+  duplicate_suppression: true
+  low_confidence_ui: uncertain
+
+translation:
+  model_id: "csebuetnlp/banglat5_nmt_en_bn"
+  tokenizer_use_fast: false
+  normalizer_repo: "git+https://github.com/csebuetnlp/normalizer"
+
+backend:
+  host: "0.0.0.0"
+  port: 8000
+  websocket_path: "/ws/recognize"
+
+frontend:
+  dev_port: 5173
+  vite_proxy_backend: "http://127.0.0.1:8000"
+
+mediapipe:
+  tasks_api: true
+  browser_package: "@mediapipe/tasks-vision"
+  python_landmarker: "HolisticLandmarker"
+
+hardware:
+  # Populated from reports/environment.json at setup; defaults for this cloud probe.
+  device: cpu
+  prefer_cuda: true

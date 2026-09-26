@@ -1,0 +1,9 @@
+# Core stack (versions pinned loosely for Agent 1 env; tighten during integration)
+pyyaml>=6.0
+fastapi>=0.110
+uvicorn[standard]>=0.27
+pydantic>=2.0
+numpy>=1.26
+torch>=2.2
+onnxruntime>=1.17
+pytest>=8.0
