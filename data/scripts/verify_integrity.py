@@ -96,16 +96,38 @@ def verify_asl_citizen(root: Path) -> dict[str, Any]:
         except ValueError:
             pass
 
+    cache_path = citizen_dir / ".asl_citizen_integrity.json"
+
     if zip_path.is_file():
         size = zip_path.stat().st_size
+        mtime = zip_path.stat().st_mtime
         result["zip_bytes"] = size
         if size == 0:
             result["status"] = "in_progress"
             result["notes"].append("Zip file exists but is empty (download starting)")
             return result
+
+        if cache_path.is_file():
+            try:
+                cached = json.loads(cache_path.read_text(encoding="utf-8"))
+                if (
+                    cached.get("zip_bytes") == size
+                    and cached.get("zip_mtime") == mtime
+                    and cached.get("status") == "verified"
+                ):
+                    result.update(cached)
+                    result["notes"] = list(cached.get("notes", [])) + ["from_cache"]
+                    return result
+            except (json.JSONDecodeError, TypeError):
+                pass
+
         try:
             with zipfile.ZipFile(zip_path) as zf:
-                names = [n for n in zf.namelist() if n.lower().endswith((".mp4", ".avi", ".mov", ".mkv"))]
+                names = [
+                    n
+                    for n in zf.namelist()
+                    if n.lower().endswith((".mp4", ".avi", ".mov", ".mkv"))
+                ]
                 result["extracted_video_count"] = len(names)
                 bad = zf.testzip()
                 result["zip_complete"] = bad is None
@@ -125,6 +147,11 @@ def verify_asl_citizen(root: Path) -> dict[str, Any]:
             if not in_range:
                 result["notes"].append(
                     f"Video count {result['extracted_video_count']} outside expected range"
+                )
+            if result["status"] == "verified":
+                cache_payload = {**result, "zip_mtime": mtime, "notes": []}
+                cache_path.write_text(
+                    json.dumps(cache_payload, indent=2) + "\n", encoding="utf-8"
                 )
         return result
 

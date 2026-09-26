@@ -47,6 +47,7 @@ def run_cmd(cmd: list[str], cwd: Path | None = None) -> tuple[int, str]:
 def kaggle_attempts() -> dict:
     sys.path.insert(0, str(repo_root() / "data" / "scripts"))
     from kaggle_auth import (
+        credential_mode,
         kaggle_competition_entered,
         kaggle_credentials_message,
         kaggle_credentials_present,
@@ -57,7 +58,12 @@ def kaggle_attempts() -> dict:
         "competition": "asl-signs",
         "target_dir": str(resolve_data_root() / "raw" / "kaggle_asl_signs"),
         "credentials_present": creds_ok,
-        "auth_modes": ["KAGGLE_USERNAME+KAGGLE_KEY", "KAGGLE_API_TOKEN", "~/.kaggle/access_token"],
+        "credential_mode": credential_mode(),
+        "auth_modes": [
+            "KAGGLE_USERNAME+KAGGLE_KEY",
+            "KAGGLE_API_TOKEN",
+            "~/.kaggle/access_token",
+        ],
         "competition_rules_accepted": None,
         "attempts": [],
         "status": "blocked",
@@ -75,6 +81,7 @@ def kaggle_attempts() -> dict:
     entered, entered_detail = kaggle_competition_entered("asl-signs")
     out["competition_rules_accepted"] = entered
     out["competition_entry_detail"] = entered_detail
+    out["user_has_entered_competition"] = entered
     if entered is False:
         out["status"] = "blocked_competition_rules"
         out["message"] = (
@@ -83,6 +90,9 @@ def kaggle_attempts() -> dict:
             "while logged in as the token owner, accept the rules (Join Competition), "
             "then re-run acquisition."
         )
+        out["fallback_tier"] = (
+            "Tier 3 — WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)"
+        )
         return out
 
     kaggle_bin = os.environ.get("KAGGLE_BIN", "kaggle")
@@ -90,6 +100,9 @@ def kaggle_attempts() -> dict:
         kaggle_bin = str(Path.home() / ".local" / "bin" / "kaggle")
     out_dir = Path(out["target_dir"])
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    _, list_log = run_cmd([kaggle_bin, "competitions", "list", "-s", "asl-signs"])
+    out["competition_list_excerpt"] = list_log[-1500:]
 
     for attempt in range(1, MAX_RETRIES + 1):
         code, log = run_cmd(
@@ -115,6 +128,9 @@ def kaggle_attempts() -> dict:
                 "Kaggle returned 403 Forbidden on download — usually means competition "
                 "rules were not accepted. Join at "
                 "https://www.kaggle.com/competitions/asl-signs/rules then re-run."
+            )
+            out["fallback_tier"] = (
+                "Tier 3 — WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)"
             )
             return out
 
@@ -158,7 +174,6 @@ def asl_citizen_status() -> dict:
         "fallback_tier": None,
     }
 
-    # Expected full zip ~42.8 GB per Microsoft dataset page
     expected_zip_bytes = 40_000_000_000
 
     if pid_file.is_file():
@@ -179,7 +194,6 @@ def asl_citizen_status() -> dict:
         if size >= expected_zip_bytes:
             status["status"] = "download_complete_pending_integrity"
             return status
-        # Partial file without active pid — may have failed mid-download
         if size > 0:
             status["status"] = "partial_or_stalled"
             status["fallback_tier"] = "Tier 2 — Hugging Face Voxel51/WLASL (video mirror)"
