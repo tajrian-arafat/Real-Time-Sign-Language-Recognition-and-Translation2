@@ -1,0 +1,72 @@
+{
+  "source": "placeholder_vocabulary",
+  "model_id": "csebuetnlp/banglat5_nmt_en_bn",
+  "word_count": 10,
+  "model_load_sec": 0.6436,
+  "total_build_sec": 3.8386,
+  "note": "Placeholder vocabulary — re-run after Agent 3 writes data/processed/label_map.json",
+  "dictionary": {
+    "hello": "হ্যালো",
+    "thank you": "ধন্যবাদ",
+    "yes": "হাঁ",
+    "no": "না",
+    "please": "দয়া করা",
+    "water": "জল",
+    "help": "সাহায্যকরা",
+    "good": "ভাল",
+    "morning": "সকাল",
+    "friend": "বন্ধু"
+  },
+  "details": [
+    {
+      "english": "hello",
+      "bangla": "হ্যালো",
+      "latency_sec": 0.0905
+    },
+    {
+      "english": "thank you",
+      "bangla": "ধন্যবাদ",
+      "latency_sec": 0.071
+    },
+    {
+      "english": "yes",
+      "bangla": "হাঁ",
+      "latency_sec": 0.0529
+    },
+    {
+      "english": "no",
+      "bangla": "না",
+      "latency_sec": 0.0683
+    },
+    {
+      "english": "please",
+      "bangla": "দয়া করা",
+      "latency_sec": 0.069
+    },
+    {
+      "english": "water",
+      "bangla": "জল",
+      "latency_sec": 0.0686
+    },
+    {
+      "english": "help",
+      "bangla": "সাহায্যকরা",
+      "latency_sec": 0.0693
+    },
+    {
+      "english": "good",
+      "bangla": "ভাল",
+      "latency_sec": 0.0538
+    },
+    {
+      "english": "morning",
+      "bangla": "সকাল",
+      "latency_sec": 0.0902
+    },
+    {
+      "english": "friend",
+      "bangla": "বন্ধু",
+      "latency_sec": 0.0698
+    }
+  ]
+}
