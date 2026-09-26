@@ -11,6 +11,7 @@ export type PredictionMessage = {
   model_version?: string;
   vocab_size?: number;
   latency_ms?: number;
+  committed_word?: string | null;
 };
 
 export type StatusMessage = {

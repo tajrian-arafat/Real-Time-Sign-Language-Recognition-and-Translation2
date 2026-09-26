@@ -11,6 +11,8 @@ import {
   useState,
   type RefObject,
 } from "react";
+import { flattenLandmarkFrame } from "../lib/landmarkFlatten";
+import type { LandmarkFrame } from "../types/ws";
 
 export type MediapipeStatus =
   | "idle"
@@ -42,6 +44,7 @@ export function useMediapipeLandmarks(
   videoRef: RefObject<HTMLVideoElement>,
   canvasRef: RefObject<HTMLCanvasElement>,
   active: boolean,
+  onFrame?: (frame: LandmarkFrame) => void,
 ) {
   const [status, setStatus] = useState<MediapipeStatus>("idle");
   const [error, setError] = useState<string | null>(null);
@@ -189,13 +192,19 @@ export function useMediapipeLandmarks(
 
           const handPts =
             handResult.landmarks?.map((lm) =>
-              lm.map((p) => ({ x: p.x, y: p.y })),
+              lm.map((p) => ({ x: p.x, y: p.y, z: p.z })),
             ) ?? [];
           const posePts = poseResult.landmarks?.[0]?.map((p) => ({
             x: p.x,
             y: p.y,
+            z: p.z,
           }));
-          const faceCount = faceResult.faceLandmarks?.[0]?.length ?? 0;
+          const facePts = faceResult.faceLandmarks?.[0]?.map((p) => ({
+            x: p.x,
+            y: p.y,
+            z: p.z,
+          }));
+          const faceCount = facePts?.length ?? 0;
 
           const handCount = handPts.reduce((n, h) => n + h.length, 0);
           const poseCount = posePts?.length ?? 0;
@@ -217,6 +226,18 @@ export function useMediapipeLandmarks(
               posePts,
             );
           }
+
+          if (onFrame) {
+            const landmarks = flattenLandmarkFrame({
+              hands: handPts,
+              pose: posePts,
+              face: facePts,
+            });
+            onFrame({
+              timestamp_ms: Math.round(performance.now()),
+              landmarks,
+            });
+          }
         }
       }
 
@@ -230,7 +251,7 @@ export function useMediapipeLandmarks(
         rafRef.current = null;
       }
     };
-  }, [active, status, videoRef, canvasRef, drawStubOverlay]);
+  }, [active, status, videoRef, canvasRef, drawStubOverlay, onFrame]);
 
   return { status, error, counts };
 }

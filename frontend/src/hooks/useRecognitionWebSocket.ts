@@ -79,9 +79,17 @@ export function useRecognitionWebSocket(active: boolean) {
       const parsed = JSON.parse(raw) as ServerMessage;
       if (parsed.type === "prediction") {
         setSnapshot(applyPrediction(parsed));
+        return;
+      }
+      if (parsed.type === "status") {
+        if (parsed.connection === "connected") {
+          setConnectionState("connected");
+        } else if (parsed.connection === "error") {
+          setConnectionState("error");
+        }
       }
     } catch {
-      /* ignore malformed frames in scaffolding */
+      /* ignore malformed frames */
     }
   }, []);
 

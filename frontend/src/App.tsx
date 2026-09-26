@@ -6,26 +6,45 @@ import { RecognitionPanel } from "./components/RecognitionPanel";
 import { ScopeNotice } from "./components/ScopeNotice";
 import { SentenceBar } from "./components/SentenceBar";
 import { VideoUploadControls } from "./components/VideoUploadControls";
-import { INFERENCE, MOCK_BANGLA_GLOSS } from "./config";
+import { INFERENCE } from "./config";
 import { useFps } from "./hooks/useFps";
+import { useLandmarkWindowBuffer } from "./hooks/useLandmarkWindowBuffer";
 import { useMediapipeLandmarks } from "./hooks/useMediapipeLandmarks";
 import { useRecognitionWebSocket } from "./hooks/useRecognitionWebSocket";
 import { useSentenceBuffer } from "./hooks/useSentenceBuffer";
+import { useTranslationApi } from "./hooks/useTranslationApi";
 import { useWebcam } from "./hooks/useWebcam";
+import type { LandmarkFrame } from "./types/ws";
+
+const MIN_FRAMES_BEFORE_SEND = 8;
+const LANDMARK_SEND_INTERVAL_MS = 250;
 
 export default function App() {
   const [cameraOn, setCameraOn] = useState(false);
   const [debugOpen, setDebugOpen] = useState(false);
   const [fluentBangla, setFluentBangla] = useState<string | null>(null);
   const [translatePending, setTranslatePending] = useState(false);
+  const [instantGloss, setInstantGloss] = useState<string | null>(null);
+  const [wordByWordBangla, setWordByWordBangla] = useState("");
+  const [translateError, setTranslateError] = useState<string | null>(null);
 
   const canvasRef = useRef<HTMLCanvasElement>(null!);
 
   const { videoRef, status: webcamStatus, error: webcamError } =
     useWebcam(cameraOn);
 
+  const { pushFrame, getWindow, clear: clearLandmarkBuffer } =
+    useLandmarkWindowBuffer();
+
+  const onLandmarkFrame = useCallback(
+    (frame: LandmarkFrame) => {
+      pushFrame(frame);
+    },
+    [pushFrame],
+  );
+
   const { status: mpStatus, error: mpError, counts: landmarkCounts } =
-    useMediapipeLandmarks(videoRef, canvasRef, cameraOn);
+    useMediapipeLandmarks(videoRef, canvasRef, cameraOn, onLandmarkFrame);
 
   const sessionActive = cameraOn;
   const fps = useFps(cameraOn && webcamStatus === "active");
@@ -45,6 +64,42 @@ export default function App() {
     clear,
   } = useSentenceBuffer();
 
+  const { translateWord, translateWords, translateSentence } =
+    useTranslationApi();
+
+  useEffect(() => {
+    if (!sessionActive) {
+      clearLandmarkBuffer();
+    }
+  }, [sessionActive, clearLandmarkBuffer]);
+
+  useEffect(() => {
+    if (
+      !sessionActive ||
+      mockMode ||
+      connectionState !== "connected"
+    ) {
+      return;
+    }
+    const timer = window.setInterval(() => {
+      const frames = getWindow();
+      if (frames.length < MIN_FRAMES_BEFORE_SEND) {
+        return;
+      }
+      sendLandmarkWindow({
+        type: "landmark_window",
+        frames,
+      });
+    }, LANDMARK_SEND_INTERVAL_MS);
+    return () => window.clearInterval(timer);
+  }, [
+    sessionActive,
+    mockMode,
+    connectionState,
+    getWindow,
+    sendLandmarkWindow,
+  ]);
+
   useEffect(() => {
     if (
       !sessionActive ||
@@ -61,38 +116,72 @@ export default function App() {
   }, [sessionActive, snapshot, tryCommitWord]);
 
   useEffect(() => {
-    if (!sessionActive || mockMode) return;
-    sendLandmarkWindow({
-      type: "landmark_window",
-      frames: [],
-    });
-  }, [sessionActive, mockMode, sendLandmarkWindow, snapshot.lastUpdatedAt]);
+    const word = snapshot.currentWord;
+    if (
+      !word ||
+      snapshot.confidence < INFERENCE.confidenceThreshold
+    ) {
+      setInstantGloss(null);
+      return;
+    }
+    let cancelled = false;
+    void translateWord(word)
+      .then((result) => {
+        if (!cancelled) {
+          setInstantGloss(result.bangla ?? `[${word}]`);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setInstantGloss(`[${word}]`);
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [snapshot.currentWord, snapshot.confidence, translateWord]);
 
-  const instantGloss =
-    snapshot.currentWord &&
-    snapshot.confidence >= INFERENCE.confidenceThreshold
-      ? (MOCK_BANGLA_GLOSS[snapshot.currentWord] ?? `[${snapshot.currentWord}]`)
-      : null;
+  useEffect(() => {
+    const words = englishText.split(/\s+/).filter(Boolean);
+    if (!words.length) {
+      setWordByWordBangla("");
+      return;
+    }
+    let cancelled = false;
+    void translateWords(words)
+      .then((result) => {
+        if (!cancelled) {
+          setWordByWordBangla(result.joined_bangla);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setWordByWordBangla("");
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [englishText, translateWords]);
 
-  const wordByWordBangla = englishText
-    .split(/\s+/)
-    .filter(Boolean)
-    .map((w) => MOCK_BANGLA_GLOSS[w.replace(/[.?!]$/, "")] ?? w)
-    .join(" ");
-
-  const onTranslateSentence = useCallback(() => {
-    if (!englishText.trim()) return;
+  const onTranslateSentence = useCallback(async () => {
+    if (!englishText.trim()) {
+      return;
+    }
     setTranslatePending(true);
+    setTranslateError(null);
     setFluentBangla(null);
-    window.setTimeout(() => {
-      setFluentBangla(
-        mockMode
-          ? `[Mock fluent Bangla for: "${englishText}"] — BanglaT5 wiring pending Agent 5/6.`
-          : null,
-      );
+    try {
+      const result = await translateSentence(englishText);
+      setFluentBangla(result.bangla);
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Sentence translation failed";
+      setTranslateError(message);
+    } finally {
       setTranslatePending(false);
-    }, 600);
-  }, [englishText, mockMode]);
+    }
+  }, [englishText, translateSentence]);
 
   return (
     <div className="mx-auto flex min-h-screen max-w-6xl flex-col gap-6 px-4 py-6">
@@ -102,7 +191,8 @@ export default function App() {
             Real-Time ASL → Bangla
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Browser MediaPipe Tasks + WebSocket inference (mock until backend)
+            Browser MediaPipe Tasks → landmark WebSocket → stub ONNX + Bangla REST
+            {mockMode ? " (mock mode)" : ""}
           </p>
         </div>
         <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-300">
@@ -144,7 +234,11 @@ export default function App() {
             wordByWordBangla={wordByWordBangla}
             fluentSentence={fluentBangla}
             translatePending={translatePending}
-            onTranslateSentence={onTranslateSentence}
+            translateError={translateError}
+            mockMode={mockMode}
+            onTranslateSentence={() => {
+              void onTranslateSentence();
+            }}
           />
         </div>
       </div>

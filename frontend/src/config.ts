@@ -1,8 +1,8 @@
 const env = import.meta.env;
 
-/** Use mock predictions until the real backend (Agent 6) is wired. */
+/** Opt-in mock mode when VITE_MOCK_WS is true/1 (default: real backend). */
 export const MOCK_WEBSOCKET =
-  env.VITE_MOCK_WS !== "false" && env.VITE_MOCK_WS !== "0";
+  env.VITE_MOCK_WS === "true" || env.VITE_MOCK_WS === "1";
 
 export const WEBSOCKET_PATH =
   (env.VITE_WS_PATH as string | undefined) ?? "/ws/recognize";

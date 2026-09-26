@@ -1,10 +1,10 @@
-import { MOCK_BANGLA_GLOSS } from "../config";
-
 type BanglaPanelProps = {
   wordGloss: string | null;
   wordByWordBangla: string;
   fluentSentence: string | null;
   translatePending: boolean;
+  translateError?: string | null;
+  mockMode: boolean;
   onTranslateSentence: () => void;
 };
 
@@ -13,6 +13,8 @@ export function BanglaPanel({
   wordByWordBangla,
   fluentSentence,
   translatePending,
+  translateError,
+  mockMode,
   onTranslateSentence,
 }: BanglaPanelProps) {
   return (
@@ -50,14 +52,18 @@ export function BanglaPanel({
           </div>
           <p className="mt-2 min-h-[2.5rem] text-xl leading-relaxed text-slate-200">
             {fluentSentence ??
-              "Run translation after the backend is connected (stub shows placeholder in mock mode)."}
+              (mockMode
+                ? "Mock mode — set VITE_MOCK_WS=false and run the FastAPI backend for BanglaT5."
+                : "Press Translate sentence for fluent Bangla (BanglaT5 via POST /api/translate/sentence).")}
           </p>
+          {translateError && (
+            <p className="mt-2 font-sans text-sm text-red-400">{translateError}</p>
+          )}
         </div>
       </div>
 
       <p className="mt-3 font-sans text-xs text-slate-500">
-        Mock gloss map sample:{" "}
-        {Object.keys(MOCK_BANGLA_GLOSS).slice(0, 3).join(", ")}…
+        Instant gloss: POST /api/translate/word · Sentence bar: /api/translate/words
       </p>
     </section>
   );
