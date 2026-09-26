@@ -1,0 +1,9 @@
+{
+  "status": "waiting_for_kaggle",
+  "generated_at_utc": "2026-09-26T23:06:43.621462+00:00",
+  "agent": "Agent 3 \u2014 Data Preprocessing",
+  "reason": "kaggle raw directory missing",
+  "kaggle_dir": "/workspace/data/raw/kaggle_asl_signs",
+  "message": "Preprocessing pipeline code is ready. Full run requires verified Kaggle asl-signs parquets under raw/kaggle_asl_signs (KAGGLE_USERNAME/KAGGLE_KEY).",
+  "unit_tests": "tests/unit/test_preprocessing.py"
+}
