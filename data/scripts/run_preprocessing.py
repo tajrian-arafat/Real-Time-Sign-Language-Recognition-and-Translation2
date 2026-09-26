@@ -26,7 +26,7 @@ def write_waiting_status(reason: str, kaggle_dir: Path) -> None:
         "kaggle_dir": str(kaggle_dir),
         "message": (
             "Preprocessing pipeline code is ready. Full run requires verified Kaggle "
-            "asl-signs parquets under raw/kaggle_asl_signs (KAGGLE_USERNAME/KAGGLE_KEY)."
+            "asl-signs parquets under raw/kaggle_asl_signs (Kaggle API token + competition join)."
         ),
         "unit_tests": "tests/unit/test_preprocessing.py",
     }

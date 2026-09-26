@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import sys
+import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -44,25 +45,43 @@ def run_cmd(cmd: list[str], cwd: Path | None = None) -> tuple[int, str]:
 
 
 def kaggle_attempts() -> dict:
-    username = os.environ.get("KAGGLE_USERNAME", "").strip()
-    api_key = os.environ.get("KAGGLE_KEY", "").strip()
+    sys.path.insert(0, str(repo_root() / "data" / "scripts"))
+    from kaggle_auth import (
+        kaggle_competition_entered,
+        kaggle_credentials_message,
+        kaggle_credentials_present,
+    )
+
+    creds_ok = kaggle_credentials_present()
     out: dict = {
         "competition": "asl-signs",
         "target_dir": str(resolve_data_root() / "raw" / "kaggle_asl_signs"),
-        "credentials_present": bool(username and api_key),
+        "credentials_present": creds_ok,
+        "auth_modes": ["KAGGLE_USERNAME+KAGGLE_KEY", "KAGGLE_API_TOKEN", "~/.kaggle/access_token"],
+        "competition_rules_accepted": None,
         "attempts": [],
         "status": "blocked",
         "fallback_tier": None,
     }
 
-    if not out["credentials_present"]:
+    if not creds_ok:
         out["status"] = "blocked_missing_credentials"
         out["fallback_tier"] = (
             "Tier 3 — WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)"
         )
+        out["message"] = kaggle_credentials_message()
+        return out
+
+    entered, entered_detail = kaggle_competition_entered("asl-signs")
+    out["competition_rules_accepted"] = entered
+    out["competition_entry_detail"] = entered_detail
+    if entered is False:
+        out["status"] = "blocked_competition_rules"
         out["message"] = (
-            "KAGGLE_USERNAME and KAGGLE_KEY are not set. "
-            "Obtain a free Kaggle API token and re-run acquisition."
+            "Kaggle API token is valid but this account has not joined competition "
+            "asl-signs. Open https://www.kaggle.com/competitions/asl-signs/rules "
+            "while logged in as the token owner, accept the rules (Join Competition), "
+            "then re-run acquisition."
         )
         return out
 
@@ -86,8 +105,17 @@ def kaggle_attempts() -> dict:
         )
         out["attempts"].append({"attempt": attempt, "exit_code": code, "log_tail": log[-2000:]})
         if code == 0:
+            extract_kaggle_archives(out_dir)
             out["status"] = "downloaded"
             out["fallback_tier"] = None
+            return out
+        if "403" in log and "Forbidden" in log:
+            out["status"] = "blocked_competition_rules"
+            out["message"] = (
+                "Kaggle returned 403 Forbidden on download — usually means competition "
+                "rules were not accepted. Join at "
+                "https://www.kaggle.com/competitions/asl-signs/rules then re-run."
+            )
             return out
 
     out["status"] = "failed_after_retries"
@@ -101,6 +129,15 @@ def shutil_which(name: str) -> str | None:
     from shutil import which
 
     return which(name)
+
+
+def extract_kaggle_archives(kaggle_dir: Path) -> None:
+    """Extract competition zip archives when parquets are not yet present."""
+    if any(kaggle_dir.rglob("*.parquet")):
+        return
+    for archive in kaggle_dir.glob("*.zip"):
+        with zipfile.ZipFile(archive) as zf:
+            zf.extractall(kaggle_dir)
 
 
 def asl_citizen_status() -> dict:

@@ -22,6 +22,8 @@ On this cloud development VM, use repo-relative storage under `/workspace/data/`
 export SIGN_LANGUAGE_DATA_ROOT=/workspace/data
 ```
 
+Kaggle `asl-signs` download accepts either legacy `KAGGLE_USERNAME` / `KAGGLE_KEY` or the newer `KAGGLE_API_TOKEN` (also read from `~/.kaggle/access_token`). Never commit tokens.
+
 (or leave unset once path resolution helpers are added in later agents; the config file documents both patterns).
 
 ## Quick start (Agent 1 scaffolding)

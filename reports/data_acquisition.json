@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-26T22:59:32.432428+00:00",
+  "generated_at_utc": "2026-09-26T23:13:50.425590+00:00",
   "agent": "Agent 2 \u2014 Data Acquisition",
   "data_root_cloud": "/workspace/data",
   "data_root_windows_local_documentation": "D:\\PROJECTS\\sign language",
@@ -7,20 +7,27 @@
   "kaggle": {
     "competition": "asl-signs",
     "target_dir": "/workspace/data/raw/kaggle_asl_signs",
-    "credentials_present": false,
+    "credentials_present": true,
+    "auth_modes": [
+      "KAGGLE_USERNAME+KAGGLE_KEY",
+      "KAGGLE_API_TOKEN",
+      "~/.kaggle/access_token"
+    ],
+    "competition_rules_accepted": false,
     "attempts": [],
-    "status": "blocked_missing_credentials",
-    "fallback_tier": "Tier 3 \u2014 WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)",
-    "message": "KAGGLE_USERNAME and KAGGLE_KEY are not set. Obtain a free Kaggle API token and re-run acquisition."
+    "status": "blocked_competition_rules",
+    "fallback_tier": null,
+    "competition_entry_detail": "user_has_entered=False",
+    "message": "Kaggle API token is valid but this account has not joined competition asl-signs. Open https://www.kaggle.com/competitions/asl-signs/rules while logged in as the token owner, accept the rules (Join Competition), then re-run acquisition."
   },
   "asl_citizen": {
     "source_page": "https://www.microsoft.com/en-us/research/project/asl-citizen/",
     "official_url": "https://download.microsoft.com/download/b/8/8/b88c0bae-e6c1-43e1-8726-98cf5af36ca4/ASL_Citizen.zip",
     "target_dir": "/workspace/data/raw/asl_citizen",
     "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
-    "background_pid": null,
+    "background_pid": 5572,
     "wget_log": "/workspace/data/raw/asl_citizen/wget_asl_citizen.log",
-    "status": "possibly_complete",
+    "status": "started_background",
     "fallback_tier": null
   },
   "integrity": {
@@ -38,7 +45,7 @@
       "path": "/workspace/data/raw/asl_citizen",
       "status": "in_progress",
       "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
-      "zip_bytes": 2461318358,
+      "zip_bytes": null,
       "zip_complete": null,
       "extracted_video_count": 0,
       "expected_video_range": [
@@ -47,7 +54,7 @@
       ],
       "in_expected_range": null,
       "notes": [
-        "Background download active (pid 2856)"
+        "Background download active (pid 5572)"
       ]
     }
   },

@@ -17,14 +17,11 @@ def resolve_data_root() -> Path:
 
 
 def main() -> int:
-    username = os.environ.get("KAGGLE_USERNAME", "").strip()
-    api_key = os.environ.get("KAGGLE_KEY", "").strip()
-    if not username or not api_key:
-        print(
-            "BLOCKER: KAGGLE_USERNAME and/or KAGGLE_KEY are not set. "
-            "Create a free Kaggle account, enable API access, and export both env vars.",
-            file=sys.stderr,
-        )
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from kaggle_auth import kaggle_credentials_message, kaggle_credentials_present
+
+    if not kaggle_credentials_present():
+        print(f"BLOCKER: {kaggle_credentials_message()}", file=sys.stderr)
         return 2
 
     out_dir = resolve_data_root() / "raw" / "kaggle_asl_signs"
