@@ -1,0 +1,45 @@
+{
+  "health_ok": true,
+  "websocket_ok": true,
+  "deterministic_repeat_ok": true,
+  "instant_dictionary_ok": true,
+  "sample_prediction": {
+    "type": "prediction",
+    "word": "yes",
+    "confidence": 0.13382952892571978,
+    "top_k": [
+      {
+        "word": "yes",
+        "confidence": 0.13382952892571978
+      },
+      {
+        "word": "help",
+        "confidence": 0.13347576931678387
+      },
+      {
+        "word": "water",
+        "confidence": 0.1288284513717121
+      },
+      {
+        "word": "no",
+        "confidence": 0.12845972173744452
+      },
+      {
+        "word": "sorry",
+        "confidence": 0.12320667195500172
+      }
+    ],
+    "model_version": "stub-deterministic-v1",
+    "vocab_size": 8,
+    "latency_ms": 16.324613999984194,
+    "committed_word": null
+  },
+  "sample_instant_translate": {
+    "english": "hello",
+    "bangla": "হ্যালো",
+    "source": "dictionary"
+  },
+  "model_version": "stub-deterministic-v1",
+  "is_stub": true,
+  "bangla_dictionary_words": 10
+}

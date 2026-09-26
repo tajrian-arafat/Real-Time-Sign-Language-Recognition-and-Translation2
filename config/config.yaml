@@ -83,6 +83,10 @@ inference:
   sliding_window_seconds_min: 1.0
   sliding_window_seconds_max: 1.5
   sliding_window_overlap: 0.5
+  served_onnx: "served/model.onnx"
+  stub_onnx: "stub/stub_classifier.onnx"
+  stub_label_map: "stub/label_map.json"
+  allow_stub_model: true
   onnx_runtime_providers:
     - CPUExecutionProvider
 

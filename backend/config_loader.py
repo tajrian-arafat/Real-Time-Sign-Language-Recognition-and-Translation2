@@ -62,3 +62,49 @@ def get_inference_settings(config: dict[str, Any]) -> dict[str, float | int | bo
         "temporal_ema_windows": int(inference.get("temporal_ema_windows", 3)),
         "duplicate_suppression": bool(sentence.get("duplicate_suppression", True)),
     }
+
+
+def resolve_models_dir(config: dict[str, Any]) -> Path:
+    paths = config.get("paths", {})
+    models_name = paths.get("models_dir", "models")
+    return (_REPO_ROOT / models_name).resolve()
+
+
+def resolve_onnx_model_path(config: dict[str, Any]) -> Path:
+    """Prefer served production ONNX; fall back to deterministic stub when allowed."""
+    inference = config.get("inference", {})
+    models_dir = resolve_models_dir(config)
+    served_rel = inference.get("served_onnx", "served/model.onnx")
+    served_path = models_dir / served_rel
+    if served_path.is_file():
+        return served_path
+    allow_stub = bool(inference.get("allow_stub_model", True))
+    stub_rel = inference.get("stub_onnx", "stub/stub_classifier.onnx")
+    stub_path = models_dir / stub_rel
+    if allow_stub:
+        return stub_path
+    raise FileNotFoundError(
+        f"No served ONNX at {served_path} and stub models are disabled"
+    )
+
+
+def resolve_label_map_path(config: dict[str, Any], onnx_path: Path) -> Path:
+    inference = config.get("inference", {})
+    models_dir = resolve_models_dir(config)
+    stub_map = models_dir / inference.get("stub_label_map", "stub/label_map.json")
+    if stub_map.is_file() and "stub" in onnx_path.parts:
+        return stub_map
+    sibling = onnx_path.parent / "label_map.json"
+    if sibling.is_file():
+        return sibling
+    if stub_map.is_file():
+        return stub_map
+    raise FileNotFoundError(f"No label_map.json found for model {onnx_path}")
+
+
+def get_landmark_settings(config: dict[str, Any]) -> dict[str, int]:
+    landmarks = config.get("landmarks", {})
+    return {
+        "sequence_length_T": int(landmarks.get("sequence_length_T", 64)),
+        "input_dim_per_frame": int(landmarks.get("input_dim_per_frame", 392)),
+    }

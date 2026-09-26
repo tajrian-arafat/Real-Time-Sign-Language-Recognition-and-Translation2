@@ -1,0 +1,56 @@
+{
+  "model_id": "csebuetnlp/banglat5_nmt_en_bn",
+  "device": "cpu",
+  "model_load_sec": 0.6638,
+  "sentence_latency_ui_threshold_sec": 3.0,
+  "per_sentence_latency_sec": {
+    "mean": 0.1477,
+    "max": 0.2291,
+    "samples": [
+      0.1759,
+      0.118,
+      0.2291,
+      0.0968,
+      0.1187
+    ]
+  },
+  "sentence_path_usable_for_ui": true,
+  "latency_notes": "One-time model load is paid at process startup (~several seconds on CPU). Per-sentence inference measured here is suitable for an on-demand 'Translate sentence' button if max latency stays below 3.0s.",
+  "samples": [
+    {
+      "english": "Hello, how are you?",
+      "normalized_english": "Hello, how are you?",
+      "bangla": "হ্যালো, কেমন আছো?",
+      "latency_sec": 0.1759,
+      "bengali_script_detected": true
+    },
+    {
+      "english": "Thank you very much.",
+      "normalized_english": "Thank you very much.",
+      "bangla": "অনেক ধন্যবাদ।",
+      "latency_sec": 0.118,
+      "bengali_script_detected": true
+    },
+    {
+      "english": "I love learning sign language.",
+      "normalized_english": "I love learning sign language.",
+      "bangla": "আমি সাংকেতিক ভাষা শিখতে ভালোবাসি।",
+      "latency_sec": 0.2291,
+      "bengali_script_detected": true
+    },
+    {
+      "english": "Good morning.",
+      "normalized_english": "Good morning.",
+      "bangla": "শুভ সকাল।",
+      "latency_sec": 0.0968,
+      "bengali_script_detected": true
+    },
+    {
+      "english": "Where is the bathroom?",
+      "normalized_english": "Where is the bathroom?",
+      "bangla": "বাথরুমটা কোথায়?",
+      "latency_sec": 0.1187,
+      "bengali_script_detected": true
+    }
+  ]
+}
