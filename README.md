@@ -46,3 +46,38 @@ bash scripts/run_frontend.sh  # terminal 2
 ```
 
 Full training requires processed Kaggle tensors under `$SIGN_LANGUAGE_DATA_ROOT`; see `scripts/run_training.sh` and `scripts/run_data_acquisition.py`.
+
+## Served model and validation metrics (measured)
+
+Production inference loads ONNX from:
+
+`models/served/model.onnx`
+
+(relative to repo root; absolute path on the integration VM when artifacts are present: `/workspace/models/served/model.onnx`). Label map: `models/served/label_map.json`. When this file is missing, the backend falls back to `models/stub/stub_classifier.onnx` and `/health` reports `is_stub: true` — see [docs/integration-environment.md](docs/integration-environment.md).
+
+**Validation split (Kaggle `asl-signs`, 250 classes, 9,211 samples)** — checkpoint `models/kaggle_baseline/best.pt`, artifact `reports/metrics.json`:
+
+| Metric | Value |
+| ------ | ----- |
+| Top-1 accuracy | **55.48%** (0.554771) |
+| Top-5 accuracy | **82.10%** (0.820975) |
+| Macro F1 | 0.537 |
+
+Reproduce evaluation after training: `python -m ml.evaluate` (with processed data and checkpoint on disk). Do not expect these numbers from the stub ONNX.
+
+## Inference latency benchmark
+
+WebSocket round-trip latency (synthetic landmark windows, default N=100):
+
+```bash
+source .venv/bin/activate
+python scripts/run_latency_benchmark.py
+```
+
+Output: `reports/latency_benchmark.json` (p50/p95 for round-trip and server-reported `latency_ms`).
+
+## Honest scope (integration / QA)
+
+- **Tier-1 data on integration VM:** Kaggle `asl-signs` only; ASL Citizen may be absent unless downloaded separately.
+- **Live webcam / upload-video E2E:** requires a browser session with camera or a sample clip; see [docs/manual-e2e-checklist.md](docs/manual-e2e-checklist.md).
+- **Bangla:** 250-word instant dictionary plus optional BanglaT5 sentence path (on-demand model download).

@@ -1,0 +1,26 @@
+{
+  "generated_at_utc": "2026-09-27T04:49:58.569775+00:00",
+  "method": "fastapi_testclient_websocket",
+  "endpoint": "/ws/recognize",
+  "num_samples": 100,
+  "health": {
+    "is_stub": true,
+    "model_path": "/workspace/models/stub/stub_classifier.onnx",
+    "model_loaded": true
+  },
+  "round_trip_ms": {
+    "min": 3.5116,
+    "max": 8.766,
+    "mean": 3.7099,
+    "p50": 3.6131,
+    "p95": 3.8142
+  },
+  "server_reported_latency_ms": {
+    "min": 0.271,
+    "max": 4.7631,
+    "mean": 0.3377,
+    "p50": 0.2819,
+    "p95": 0.3605
+  },
+  "notes": "round_trip_ms includes TestClient JSON serialize/deserialize; server_reported_latency_ms is classifier.predict_window only."
+}
