@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-27T00:08:52.300999+00:00",
+  "generated_at_utc": "2026-09-27T01:45:40.903873+00:00",
   "agent": "Agent 2 \u2014 Data Acquisition",
   "data_root_cloud": "/workspace/data",
   "data_root_windows_local_documentation": "D:\\PROJECTS\\sign language",
@@ -7,54 +7,45 @@
   "kaggle": {
     "competition": "asl-signs",
     "target_dir": "/workspace/data/raw/kaggle_asl_signs",
-    "credentials_present": true,
-    "credential_mode": "KAGGLE_API_TOKEN",
+    "credentials_present": false,
+    "credential_mode": "none",
     "auth_modes": [
       "KAGGLE_USERNAME+KAGGLE_KEY",
       "KAGGLE_API_TOKEN",
       "~/.kaggle/access_token"
     ],
-    "competition_rules_accepted": true,
-    "attempts": [
-      {
-        "attempt": 1,
-        "exit_code": 0,
-        "log_tail": "asl-signs.zip: Skipping, found more recently modified local copy (use --force to force download)"
-      }
-    ],
-    "status": "downloaded",
-    "fallback_tier": null,
-    "competition_entry_detail": "user_has_entered=True",
-    "user_has_entered_competition": true,
-    "competition_list_excerpt": "ref                                            deadline             category       reward  teamCount  userHasEntered  userRank  \n---------------------------------------------  -------------------  --------  -----------  ---------  --------------  --------  \nhttps://www.kaggle.com/competitions/asl-signs  2023-05-01 23:59:00  Research  100,000 Usd       1165            True         0"
+    "competition_rules_accepted": null,
+    "attempts": [],
+    "status": "blocked_missing_credentials",
+    "fallback_tier": "Tier 3 \u2014 WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)",
+    "message": "Set KAGGLE_USERNAME and KAGGLE_KEY, or export KAGGLE_API_TOKEN (see https://www.kaggle.com/settings \u2014 API token), then re-run."
   },
   "asl_citizen": {
     "source_page": "https://www.microsoft.com/en-us/research/project/asl-citizen/",
     "official_url": "https://download.microsoft.com/download/b/8/8/b88c0bae-e6c1-43e1-8726-98cf5af36ca4/ASL_Citizen.zip",
     "target_dir": "/workspace/data/raw/asl_citizen",
     "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
-    "background_pid": 7357,
+    "background_pid": 4172,
     "wget_log": "/workspace/data/raw/asl_citizen/wget_asl_citizen.log",
-    "status": "in_progress",
-    "fallback_tier": null,
-    "zip_bytes_so_far": 16986532639
+    "status": "started_background",
+    "fallback_tier": null
   },
   "integrity": {
     "kaggle_asl_signs": {
       "path": "/workspace/data/raw/kaggle_asl_signs",
-      "status": "verified",
-      "parquet_count": 94477,
-      "train_csv_rows": 94477,
-      "match": true,
+      "status": "missing",
+      "parquet_count": 0,
+      "train_csv_rows": null,
+      "match": null,
       "notes": [
-        "Found archive(s) asl-signs.zip; extract before parquet check"
+        "Directory does not exist"
       ]
     },
     "asl_citizen": {
       "path": "/workspace/data/raw/asl_citizen",
       "status": "in_progress",
       "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
-      "zip_bytes": 17067965940,
+      "zip_bytes": null,
       "zip_complete": null,
       "extracted_video_count": 0,
       "expected_video_range": [
@@ -63,7 +54,7 @@
       ],
       "in_expected_range": null,
       "notes": [
-        "Background download active (pid 7357)"
+        "Background download active (pid 4172)"
       ]
     }
   },
