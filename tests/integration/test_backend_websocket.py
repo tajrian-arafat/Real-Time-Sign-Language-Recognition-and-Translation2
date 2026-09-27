@@ -36,7 +36,11 @@ def test_health_reports_model(client: TestClient) -> None:
     assert resp.status_code == 200
     body = resp.json()
     assert body["model_loaded"] is True
-    assert body["is_stub"] is True
+    served_onnx = Path("models/served/model.onnx")
+    if served_onnx.is_file():
+        assert body["is_stub"] is False
+    else:
+        assert body["is_stub"] is True
 
 
 def test_websocket_prediction_round_trip(client: TestClient, tmp_path: Path) -> None:

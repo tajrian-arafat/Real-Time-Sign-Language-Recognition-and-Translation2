@@ -1,0 +1,31 @@
+{
+  "generated_at_utc": "2026-09-27T04:41:31.106004+00:00",
+  "data_root": "/workspace/data",
+  "kaggle_dir": "/workspace/data/raw/kaggle_asl_signs",
+  "kaggle_data_ready": true,
+  "kaggle_ready_detail": "verified",
+  "train_csv": "/workspace/data/raw/kaggle_asl_signs/train.csv",
+  "parquet_count": 94477,
+  "preprocess_config_hash": "9650da03818e",
+  "tensor_cache_dir": "/workspace/data/processed/kaggle_asl_signs/tensors/9650da03818e",
+  "npz_count": 94477,
+  "processed_tensors_ready": true,
+  "processed_root": "/workspace/data/processed/kaggle_asl_signs",
+  "checkpoints": {
+    "run_dir": "/workspace/models/kaggle_baseline",
+    "last.pt": {
+      "path": "/workspace/models/kaggle_baseline/last.pt",
+      "size_bytes": 32116793,
+      "mtime_utc": "2026-09-27T04:09:58.171491+00:00"
+    },
+    "best.pt": {
+      "path": "/workspace/models/kaggle_baseline/best.pt",
+      "size_bytes": 32116793,
+      "mtime_utc": "2026-09-27T04:09:58.251492+00:00"
+    }
+  },
+  "served_onnx": "/workspace/models/served/model.onnx",
+  "served_onnx_exists": true,
+  "run_name": "kaggle_baseline",
+  "suggested_next": "# Pipeline artifacts look complete; run backend/frontend or re-train if needed"
+}

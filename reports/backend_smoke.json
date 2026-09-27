@@ -5,33 +5,33 @@
   "instant_dictionary_ok": true,
   "sample_prediction": {
     "type": "prediction",
-    "word": "yes",
-    "confidence": 0.13382952892571978,
+    "word": "another",
+    "confidence": 0.06581417944343464,
     "top_k": [
       {
-        "word": "yes",
-        "confidence": 0.13382952892571978
+        "word": "another",
+        "confidence": 0.06581417944343464
       },
       {
-        "word": "help",
-        "confidence": 0.13347576931678387
+        "word": "not",
+        "confidence": 0.05151225224231824
       },
       {
-        "word": "water",
-        "confidence": 0.1288284513717121
+        "word": "hide",
+        "confidence": 0.04685900467202258
       },
       {
-        "word": "no",
-        "confidence": 0.12845972173744452
+        "word": "any",
+        "confidence": 0.0455490921829458
       },
       {
-        "word": "sorry",
-        "confidence": 0.12320667195500172
+        "word": "jacket",
+        "confidence": 0.04028082961579817
       }
     ],
-    "model_version": "stub-deterministic-v1",
-    "vocab_size": 8,
-    "latency_ms": 16.324613999984194,
+    "model_version": "model",
+    "vocab_size": 250,
+    "latency_ms": 2.4743499998294283,
     "committed_word": null
   },
   "sample_instant_translate": {
@@ -39,7 +39,7 @@
     "bangla": "হ্যালো",
     "source": "dictionary"
   },
-  "model_version": "stub-deterministic-v1",
+  "model_version": "model",
   "is_stub": true,
-  "bangla_dictionary_words": 10
+  "bangla_dictionary_words": 250
 }

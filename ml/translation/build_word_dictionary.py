@@ -80,7 +80,10 @@ def extract_english_words(label_map: Any) -> list[str]:
                 if isinstance(w, str):
                     words.append(w)
     elif isinstance(label_map, dict):
-        if "words" in label_map and isinstance(label_map["words"], list):
+        label_to_index = label_map.get("label_to_index")
+        if isinstance(label_to_index, dict):
+            words.extend(str(gloss) for gloss in label_to_index.keys())
+        elif "words" in label_map and isinstance(label_map["words"], list):
             words.extend(str(w) for w in label_map["words"])
         elif "labels" in label_map and isinstance(label_map["labels"], list):
             words.extend(str(w) for w in label_map["labels"])

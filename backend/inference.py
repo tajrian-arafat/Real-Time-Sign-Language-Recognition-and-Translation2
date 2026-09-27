@@ -135,6 +135,23 @@ class OnnxSignClassifier:
             label_data = json.load(f)
         labels = label_data.get("labels") or label_data.get("classes")
         if not isinstance(labels, list) or not labels:
+            index_to_label = label_data.get("index_to_label")
+            if isinstance(index_to_label, dict):
+                labels = [
+                    str(index_to_label[str(i)])
+                    for i in range(len(index_to_label))
+                    if str(i) in index_to_label
+                ]
+            else:
+                label_to_index = label_data.get("label_to_index")
+                if isinstance(label_to_index, dict):
+                    labels = [
+                        gloss
+                        for gloss, _idx in sorted(
+                            label_to_index.items(), key=lambda item: item[1]
+                        )
+                    ]
+        if not isinstance(labels, list) or not labels:
             raise ValueError(f"Invalid label map at {self._label_map_path}")
         self._labels: list[str] = [str(x) for x in labels]
 

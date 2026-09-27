@@ -1,30 +1,29 @@
 {
-  "generated_at_utc": "2026-09-27T01:46:30.000000+00:00",
-  "agent": "Full Kaggle regen retrain (worker bc-f388e82a)",
-  "run_mode": "blocked_missing_kaggle_data",
+  "generated_at_utc": "2026-09-27T04:41:23.077898+00:00",
+  "agent": "Agent 4 \u2014 Model Training & Evaluation",
+  "run_mode": "synthetic_smoke",
   "real_data_available": false,
-  "commit_sha": "bbd26a76194b6cd64b4f60c02dd815745c807bbb",
-  "branch": "agent-2-data-acquisition",
-  "device": null,
-  "batch_size": null,
-  "learning_rate": 0.0001,
+  "device": "cpu",
+  "batch_size": 32,
+  "learning_rate": 7.5e-05,
   "grad_clip_norm": 1.0,
-  "num_classes": null,
-  "epochs_completed": 0,
-  "epochs_requested": 8,
-  "global_step": 0,
-  "best_val_top1_acc": null,
-  "best_val_top5_acc": null,
-  "best_epoch": null,
-  "checkpoint_best": null,
-  "checkpoint_last": null,
-  "onnx_path": null,
-  "onnx_parity_passed": null,
-  "preprocessing_verify": {
-    "status": "not_run",
-    "reason": "No processed tensors; raw kaggle_asl_signs missing on VM"
-  },
-  "history": [],
-  "status": "blocked_missing_kaggle_credentials_and_raw_data",
-  "message": "Checked out bbd26a7 (NaN preprocess fix). This VM has no KAGGLE_API_TOKEN, no ~/.kaggle/access_token, and no raw asl-signs parquets under /workspace/data/raw/kaggle_asl_signs. A prior agent run downloaded ~94k parquets on a different ephemeral pod; data is not in git. Add KAGGLE_API_TOKEN to the Cloud Agent environment (or mount/persist raw data), re-run scripts/run_data_acquisition.py, then repeat preprocessing → verify → 8-epoch train → ONNX export."
+  "num_classes": 16,
+  "epochs_completed": 1,
+  "global_step": 4,
+  "best_val_top1_acc": 0.03125,
+  "checkpoint_best": "/workspace/models/smoke/best.pt",
+  "checkpoint_last": "/workspace/models/smoke/last.pt",
+  "elapsed_seconds": 0.744,
+  "history": [
+    {
+      "epoch": 0,
+      "train_loss": 2.8586167097091675,
+      "train_top1_acc": 0.0703125,
+      "val_loss": 2.9681484699249268,
+      "val_top1_acc": 0.03125,
+      "global_step": 4
+    }
+  ],
+  "status": "waiting_for_kaggle_data",
+  "message": "Synthetic smoke training completed; full 250-word training requires processed Kaggle tensors (accept competition rules and re-run acquisition + preprocessing)."
 }
