@@ -1,0 +1,5 @@
+{
+  "name": "ASL-Bangla integration",
+  "install": "bash scripts/setup_env.sh",
+  "terminals": []
+}

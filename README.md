@@ -35,4 +35,14 @@ python scripts/probe_environment.py
 node --version
 ```
 
-Full training, inference, and evaluation commands will be documented here as later agents land.
+Integration branch agents: see [docs/integration-environment.md](docs/integration-environment.md) for `SIGN_LANGUAGE_DATA_ROOT`, Kaggle secrets, stub vs served ONNX, and frontend mock mode.
+
+```bash
+source .venv/bin/activate
+pytest -q
+npm --prefix frontend test
+bash scripts/run_backend.sh   # terminal 1
+bash scripts/run_frontend.sh  # terminal 2
+```
+
+Full training requires processed Kaggle tensors under `$SIGN_LANGUAGE_DATA_ROOT`; see `scripts/run_training.sh` and `scripts/run_data_acquisition.py`.
