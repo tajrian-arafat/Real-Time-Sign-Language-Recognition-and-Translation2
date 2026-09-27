@@ -1,0 +1,12 @@
+{
+  "onnx_path": "/workspace/models/served/model.onnx",
+  "input_names": [
+    "landmarks"
+  ],
+  "output_shape": [
+    1,
+    250
+  ],
+  "top_logit_index": 71,
+  "real_onnx_direct": true
+}

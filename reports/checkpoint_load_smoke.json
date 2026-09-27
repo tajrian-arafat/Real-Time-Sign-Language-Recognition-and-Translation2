@@ -1,0 +1,14 @@
+{
+  "checkpoint": "/workspace/models/kaggle_baseline/best.pt",
+  "keys": [
+    "epoch",
+    "global_step",
+    "best_val_acc",
+    "model_state_dict",
+    "optimizer_state_dict",
+    "num_classes",
+    "run_mode",
+    "config_snapshot"
+  ],
+  "pytorch_load_ok": true
+}

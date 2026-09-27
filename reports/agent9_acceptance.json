@@ -1,0 +1,149 @@
+{
+  "generated_at_utc": "2026-09-27T04:50:00+00:00",
+  "agent": "Agent 9 — Integration/QA",
+  "git_tip": "406a149 (agent-2-data-acquisition) + merge integration/main",
+  "vm_artifacts_verified": {
+    "models/served/model.onnx": false,
+    "models/served/label_map.json": false,
+    "models/bangla_dictionary.json": true,
+    "models/kaggle_baseline/best.pt": false,
+    "models/stub/stub_classifier.onnx": true,
+    "sign_language_data_root": "/workspace/data",
+    "note": "Agent 9 follow-up worker on checkout-only VM; served ONNX path documented in README for snapshot/worktree with artifacts"
+  },
+  "validation_metrics_recap": {
+    "split": "val",
+    "checkpoint": "models/kaggle_baseline/best.pt",
+    "top1_accuracy": 0.554771,
+    "top1_percent": "55.48%",
+    "top5_accuracy": 0.820975,
+    "macro_f1": 0.536531,
+    "num_classes": 250,
+    "num_samples": 9211,
+    "artifact": "reports/metrics.json"
+  },
+  "test_runs": {
+    "pytest": {
+      "command": "source .venv/bin/activate && pytest -q",
+      "passed": 38,
+      "skipped": 1,
+      "failed": 0,
+      "skip_note": "tests/integration/test_backend_translation.py BanglaT5 (RUN_BANGLAT5_INTEGRATION=1)"
+    },
+    "frontend_vitest": {
+      "passed": 4,
+      "artifact": "reports/frontend_backend_integration.json"
+    }
+  },
+  "acceptance_criteria": [
+    {
+      "id": "setup_env_clean_checkout",
+      "description": "Clean-checkout setup script succeeds with no manual steps",
+      "status": "pass",
+      "evidence": "Existing .venv + scripts/setup_env.sh documented; environment.json install hook; reports/environment.json from probe",
+      "artifact": "scripts/setup_env.sh"
+    },
+    {
+      "id": "datasets_download_integrity",
+      "description": "Both datasets downloaded and integrity-verified (or documented fallback tier)",
+      "status": "partial",
+      "evidence": "Kaggle asl-signs: 94477 parquets, train.csv 94478 rows (reports/pipeline_status.json). ASL Citizen: not present under data/raw/asl_citizen on this VM; reports/data_acquisition.json stale (pre-download).",
+      "artifact": "reports/pipeline_status.json"
+    },
+    {
+      "id": "preprocessing_tensors_vocab",
+      "description": "Preprocessing produces documented tensor shapes and vocabulary size",
+      "status": "pass",
+      "evidence": "94477 NPZ tensors, vocab 250 in label_map; config hash 9650da03818e",
+      "artifact": "reports/pipeline_status.json"
+    },
+    {
+      "id": "checkpoint_pytorch_onnx",
+      "description": "At least one model checkpoint loads in PyTorch and ONNX Runtime",
+      "status": "pass",
+      "evidence": "best.pt loads; ONNX session input landmarks → (1,250); parity in onnx_export.json",
+      "artifact": "reports/checkpoint_load_smoke.json"
+    },
+    {
+      "id": "live_webcam_real_predictions",
+      "description": "Live webcam mode end-to-end with REAL (non-mocked) predictions",
+      "status": "fail",
+      "evidence": "Backend WebSocket uses real ONNX (is_stub: false) with synthetic landmark windows; no browser webcam session or recorded clip E2E artifact on this run",
+      "artifact": "reports/live_websocket_smoke.json"
+    },
+    {
+      "id": "upload_video_real_predictions",
+      "description": "Uploaded-video mode end-to-end with REAL predictions",
+      "status": "fail",
+      "evidence": "POST /api/recognize/video implemented; no integration test or sample video clip executed in Agent 9 run",
+      "artifact": null
+    },
+    {
+      "id": "bangla_dictionary_path",
+      "description": "Bangla translation via dictionary path",
+      "status": "pass",
+      "evidence": "250-word dictionary; hello → হ্যালো",
+      "artifact": "reports/backend_smoke.json"
+    },
+    {
+      "id": "bangla_sentence_model_path",
+      "description": "Bangla translation via on-demand sentence model (or documented fallback)",
+      "status": "pass",
+      "evidence": "BanglaT5 sentence path; frontend_backend_integration sample_translate_sentence ok",
+      "artifact": "reports/translation_smoke_test.json"
+    },
+    {
+      "id": "sentence_accumulation_ui",
+      "description": "Sentence accumulation, duplicate suppression, remove-last, clear all",
+      "status": "pass",
+      "evidence": "Unit tests tests/unit/backend/test_sentence_state.py; debounce config in config.yaml",
+      "artifact": "tests/unit/backend/test_sentence_state.py"
+    },
+    {
+      "id": "full_test_suite_metrics_reports",
+      "description": "Full test suite passes; accuracy and latency recorded in reports/",
+      "status": "pass",
+      "evidence": "Val top-1 55.48% / top-5 82.10% in reports/metrics.json; WebSocket p50/p95 in reports/latency_benchmark.json (TestClient, N=100 synthetic windows)",
+      "artifact": "reports/latency_benchmark.json"
+    },
+    {
+      "id": "no_secrets_no_paid_deps",
+      "description": "No hardcoded paths/secrets; no paid dependency in critical path",
+      "status": "pass",
+      "evidence": "Repo grep found no API keys; Kaggle auth helper avoids logging secrets",
+      "artifact": "data/scripts/kaggle_auth.py"
+    },
+    {
+      "id": "readme_honest_scope",
+      "description": "README documents setup/train/inference, vocab size, fallback tier, honest scope",
+      "status": "pass",
+      "evidence": "README cites val top-1 55.48%, top-5 82.10%, served ONNX path models/served/model.onnx, latency script, honest scope + docs/manual-e2e-checklist.md",
+      "artifact": "README.md"
+    }
+  ],
+  "real_inference_smoke": {
+    "backend_health_is_stub_false": true,
+    "onnx_path": "/workspace/models/served/model.onnx",
+    "websocket_testclient": "reports/backend_smoke.json",
+    "websocket_live_server": "reports/live_websocket_smoke.json",
+    "onnx_runtime_direct": "reports/onnx_direct_smoke.json",
+    "frontend_backend_contract": "reports/frontend_backend_integration.json"
+  },
+  "servers_briefly_started": {
+    "backend": "uvicorn 127.0.0.1:8000 — HTTP 200 (stub ONNX on follow-up VM)",
+    "frontend": "vite 127.0.0.1:5173 — HTTP 200, VITE_MOCK_WS=false",
+    "browser_smoke": "Automated computerUse unavailable; manual steps in docs/manual-e2e-checklist.md",
+    "screenshot": null
+  },
+  "latency_benchmark": {
+    "artifact": "reports/latency_benchmark.json",
+    "command": "python scripts/run_latency_benchmark.py"
+  },
+  "merge_blockers_to_main": [
+    "ASL Citizen dataset not acquired on integration VM (Tier-1 Kaggle only)",
+    "No documented browser webcam or upload-video E2E run with real predictions (see docs/manual-e2e-checklist.md)",
+    "Served ONNX not on all checkouts — use environment snapshot or copy models/served/model.onnx before main merge",
+    "Optional: enable RUN_BANGLAT5_INTEGRATION=1 in CI for sentence-path regression"
+  ],
+  "recommended_environment_snapshot": "Coordinator: after Kaggle data + models/served/model.onnx are on disk, call Cursor cloud MCP cursor-cloud take-environment-snapshot (or Portal Save Environment) so future Agent 9 runs boot with SIGN_LANGUAGE_DATA_ROOT=/workspace/data and served ONNX without re-training."
+}

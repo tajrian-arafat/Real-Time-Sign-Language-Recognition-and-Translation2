@@ -1,0 +1,9 @@
+{
+  "status": "waiting_for_kaggle",
+  "generated_at_utc": "2026-09-27T04:41:23.617725+00:00",
+  "agent": "Agent 3 \u2014 Data Preprocessing",
+  "reason": "train.csv not found",
+  "kaggle_dir": "/tmp/pytest-of-ubuntu/pytest-2/test_run_preprocessing_waiting0/raw/kaggle_asl_signs",
+  "message": "Preprocessing pipeline code is ready. Full run requires verified Kaggle asl-signs parquets under raw/kaggle_asl_signs (Kaggle API token + competition join).",
+  "unit_tests": "tests/unit/test_preprocessing.py"
+}

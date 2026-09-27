@@ -1,0 +1,25 @@
+{
+  "generated_at_utc": "2026-09-27T04:41:20.678757+00:00",
+  "cache_dir": "/workspace/data/processed/kaggle_asl_signs/tensors/9650da03818e",
+  "total_npz": 94477,
+  "sample_size": 200,
+  "sample_all_finite": true,
+  "non_finite_in_sample": 0,
+  "failures": [],
+  "root_cause": {
+    "summary": "Kaggle competition parquets are long-format; holistic type offsets were wrong (left_hand at 33 instead of 501), and NaN/missing pose shoulders propagated through shoulder-width normalization and np.interp resampling into every .npz tensor.",
+    "fixes": [
+      "Correct MediaPipe holistic offsets: pose=0, face=33, left_hand=501, right_hand=522",
+      "sanitize_holistic_frames + shoulder/hip anchor fallback in normalize.py",
+      "nan_to_num after parquet load and temporal resample",
+      "finite guard in process_sequence"
+    ],
+    "code_paths": [
+      "ml/preprocess/kaggle_io.py",
+      "ml/preprocess/normalize.py",
+      "ml/preprocess/sanitize.py",
+      "ml/preprocess/sequence.py"
+    ]
+  },
+  "status": "ok"
+}

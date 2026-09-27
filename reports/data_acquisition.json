@@ -1,0 +1,62 @@
+{
+  "generated_at_utc": "2026-09-27T01:45:40.903873+00:00",
+  "agent": "Agent 2 \u2014 Data Acquisition",
+  "data_root_cloud": "/workspace/data",
+  "data_root_windows_local_documentation": "D:\\PROJECTS\\sign language",
+  "sign_language_data_root_env": "/workspace/data",
+  "kaggle": {
+    "competition": "asl-signs",
+    "target_dir": "/workspace/data/raw/kaggle_asl_signs",
+    "credentials_present": false,
+    "credential_mode": "none",
+    "auth_modes": [
+      "KAGGLE_USERNAME+KAGGLE_KEY",
+      "KAGGLE_API_TOKEN",
+      "~/.kaggle/access_token"
+    ],
+    "competition_rules_accepted": null,
+    "attempts": [],
+    "status": "blocked_missing_credentials",
+    "fallback_tier": "Tier 3 \u2014 WLASL pretrained I3D checkpoint (see FALLBACK LOGIC: Kaggle failure path)",
+    "message": "Set KAGGLE_USERNAME and KAGGLE_KEY, or export KAGGLE_API_TOKEN (see https://www.kaggle.com/settings \u2014 API token), then re-run."
+  },
+  "asl_citizen": {
+    "source_page": "https://www.microsoft.com/en-us/research/project/asl-citizen/",
+    "official_url": "https://download.microsoft.com/download/b/8/8/b88c0bae-e6c1-43e1-8726-98cf5af36ca4/ASL_Citizen.zip",
+    "target_dir": "/workspace/data/raw/asl_citizen",
+    "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
+    "background_pid": 4172,
+    "wget_log": "/workspace/data/raw/asl_citizen/wget_asl_citizen.log",
+    "status": "started_background",
+    "fallback_tier": null
+  },
+  "integrity": {
+    "kaggle_asl_signs": {
+      "path": "/workspace/data/raw/kaggle_asl_signs",
+      "status": "missing",
+      "parquet_count": 0,
+      "train_csv_rows": null,
+      "match": null,
+      "notes": [
+        "Directory does not exist"
+      ]
+    },
+    "asl_citizen": {
+      "path": "/workspace/data/raw/asl_citizen",
+      "status": "in_progress",
+      "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
+      "zip_bytes": null,
+      "zip_complete": null,
+      "extracted_video_count": 0,
+      "expected_video_range": [
+        70000,
+        95000
+      ],
+      "in_expected_range": null,
+      "notes": [
+        "Background download active (pid 4172)"
+      ]
+    }
+  },
+  "max_retries": 3
+}
