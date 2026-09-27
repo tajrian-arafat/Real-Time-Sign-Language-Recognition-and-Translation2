@@ -7,7 +7,44 @@ import numpy as np
 import pandas as pd
 
 HOLISTIC_LANDMARK_COUNT = 543
-META_COLUMNS = {"frame", "row_id", "sequence_id"}
+META_COLUMNS = {"frame", "row_id", "sequence_id", "type", "landmark_index"}
+
+_TYPE_TO_HOLISTIC_OFFSET: dict[str, int] = {
+    "pose": 0,
+    "left_hand": 33,
+    "right_hand": 54,
+    "face": 75,
+}
+
+
+def _load_long_format_landmarks(df: pd.DataFrame) -> np.ndarray:
+    """Competition parquets: one row per (frame, type, landmark_index) with x,y,z."""
+    required = {"frame", "type", "landmark_index", "x", "y", "z"}
+    if not required.issubset(df.columns):
+        raise ValueError(f"missing columns for long format: {required - set(df.columns)}")
+
+    types = df["type"].astype(str)
+    offsets = types.map(_TYPE_TO_HOLISTIC_OFFSET)
+    valid = offsets.notna()
+    if not valid.any():
+        raise ValueError("no recognized landmark types in parquet")
+
+    frame_ids = df.loc[valid, "frame"].to_numpy(dtype=np.int64)
+    holistic_idx = (
+        offsets.loc[valid].astype(np.int32).to_numpy()
+        + df.loc[valid, "landmark_index"].to_numpy(dtype=np.int32)
+    )
+    in_range = (holistic_idx >= 0) & (holistic_idx < HOLISTIC_LANDMARK_COUNT)
+    frame_ids = frame_ids[in_range]
+    holistic_idx = holistic_idx[in_range]
+    coords = df.loc[valid, ["x", "y", "z"]].to_numpy(dtype=np.float32)[in_range]
+
+    unique_frames, frame_index = np.unique(frame_ids, return_inverse=True)
+    out = np.zeros((len(unique_frames), HOLISTIC_LANDMARK_COUNT, 3), dtype=np.float32)
+    out[frame_index, holistic_idx, 0] = coords[:, 0]
+    out[frame_index, holistic_idx, 1] = coords[:, 1]
+    out[frame_index, holistic_idx, 2] = coords[:, 2]
+    return out
 
 
 def load_parquet_landmarks(path: Path) -> np.ndarray:
@@ -15,9 +52,12 @@ def load_parquet_landmarks(path: Path) -> np.ndarray:
     Read one sequence parquet into (T, 543, 3).
 
     Kaggle competition files store 1629 coordinate columns (543 landmarks × xyz),
-    plus ``frame`` / ``row_id`` metadata columns.
+    plus ``frame`` / ``row_id`` metadata columns, or long-format type/landmark_index rows.
     """
     df = pd.read_parquet(path)
+    if {"type", "landmark_index", "x", "y", "z"}.issubset(df.columns):
+        return _load_long_format_landmarks(df)
+
     if "frame" in df.columns:
         df = df.sort_values("frame")
 

@@ -1,1 +1,1 @@
-"""Machine learning package for ASL landmark classification."""
+"""Training and preprocessing utilities for ASL landmark classification."""
