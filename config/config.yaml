@@ -1,24 +1,17 @@
-# Single source of truth for paths, hyperparameters, and thresholds.
-# Override paths with environment variables where noted.
-
 paths:
-  # Windows default (documented for local dev). Override with SIGN_LANGUAGE_DATA_ROOT.
-  # Cloud VM: set SIGN_LANGUAGE_DATA_ROOT or leave unset to use repo-relative data_root below.
-  data_root: "D:\\PROJECTS\\sign language"
+  data_root: D:\PROJECTS\sign language
   data_root_env_var: SIGN_LANGUAGE_DATA_ROOT
-  # Resolved at runtime: ${SIGN_LANGUAGE_DATA_ROOT:-<repo>/data} when env is set on cloud use /workspace/data
-  repo_relative_data_root: "data"
-  raw_dir: "raw"
-  processed_dir: "processed"
-  models_dir: "models"
-  reports_dir: "reports"
-  bangla_dictionary_filename: "bangla_dictionary.json"
-  label_map_filename: "label_map.json"
-
+  repo_relative_data_root: data
+  raw_dir: raw
+  processed_dir: processed
+  models_dir: models
+  reports_dir: reports
+  bangla_dictionary_filename: bangla_dictionary.json
+  label_map_filename: label_map.json
 datasets:
-  kaggle_competition: "asl-signs"
-  kaggle_raw_subdir: "kaggle_asl_signs"
-  asl_citizen_raw_subdir: "asl_citizen"
+  kaggle_competition: asl-signs
+  kaggle_raw_subdir: kaggle_asl_signs
+  asl_citizen_raw_subdir: asl_citizen
   vocabulary:
     kaggle_baseline_words: 250
     extended_target_min: 450
@@ -30,18 +23,148 @@ datasets:
   class_balance:
     oversample_floor: 15
     drop_below: 5
-
 landmarks:
   sequence_length_T: 64
   input_dim_per_frame: 392
-  # Exact MediaPipe index lists to be filled by Agent 3; keys reserved here.
-  hand_landmark_indices: []
-  pose_landmark_indices: []
-  face_landmark_indices: []
+  hand_landmark_indices:
+  - 501
+  - 502
+  - 503
+  - 504
+  - 505
+  - 506
+  - 507
+  - 508
+  - 509
+  - 510
+  - 511
+  - 512
+  - 513
+  - 514
+  - 515
+  - 516
+  - 517
+  - 518
+  - 519
+  - 520
+  - 521
+  - 522
+  - 523
+  - 524
+  - 525
+  - 526
+  - 527
+  - 528
+  - 529
+  - 530
+  - 531
+  - 532
+  - 533
+  - 534
+  - 535
+  - 536
+  - 537
+  - 538
+  - 539
+  - 540
+  - 541
+  - 542
+  pose_landmark_indices:
+  - 0
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  - 16
+  - 17
+  - 18
+  - 23
+  - 24
+  - 25
+  face_landmark_indices:
+  - 33
+  - 34
+  - 35
+  - 37
+  - 38
+  - 39
+  - 40
+  - 46
+  - 47
+  - 50
+  - 52
+  - 66
+  - 94
+  - 111
+  - 113
+  - 114
+  - 115
+  - 117
+  - 120
+  - 121
+  - 124
+  - 127
+  - 128
+  - 179
+  - 211
+  - 214
+  - 218
+  - 224
+  - 228
+  - 230
+  - 300
+  - 302
+  - 303
+  - 324
+  - 341
+  - 343
+  - 344
+  - 345
+  - 347
+  - 350
+  - 351
+  - 354
+  - 357
+  - 408
+  - 435
+  - 438
+  - 442
+  - 448
+  - 177
+  - 178
+  - 186
+  - 187
+  - 188
+  - 190
+  - 191
+  - 192
+  - 193
+  - 194
+  - 196
+  - 206
+  - 279
+  - 282
+  - 296
+  - 395
+  - 406
+  - 407
+  - 413
+  - 414
+  - 415
+  - 417
+  - 418
+  - 419
+  - 420
+  - 421
+  - 423
+  - 431
   normalization:
     origin: shoulder_midpoint
     scale: shoulder_width
-
+  selected_landmark_count: 130
+  holistic_index_documentation: Pose uses MediaPipe pose indices 0-32 at start of
+    543-vector; face local indices offset +33; left hand +501; right hand +522.
 model:
   architecture: conv1d_transformer
   conv1d_kernel: 3
@@ -52,7 +175,6 @@ model:
   num_encoder_layers: 4
   dim_feedforward: 512
   dropout: 0.1
-
 training:
   batch_size: 128
   batch_size_low_memory: 32
@@ -61,55 +183,51 @@ training:
   optimizer: AdamW
   weight_decay: 0.01
   label_smoothing: 0.1
-  base_lr: 3.0e-4
+  base_lr: 0.0003
   base_lr_batch_size: 128
   lr_warmup_ratio: 0.05
+  grad_clip_norm: 1.0
   lr_schedule: cosine
   num_workers: 3
   mixed_precision_when_cuda: true
   resume_on_oom:
     reduce_batch: true
     log_adjustment: true
-
 augmentation:
   horizontal_mirror: true
   temporal_speed_jitter_ratio: 0.15
   coordinate_jitter_sigma: 0.01
-
 inference:
-  confidence_threshold: 0.60
+  confidence_threshold: 0.6
   temporal_ema_windows: 3
   debounce_cooldown_ms: 800
   sliding_window_seconds_min: 1.0
   sliding_window_seconds_max: 1.5
   sliding_window_overlap: 0.5
+  served_onnx: served/model.onnx
+  stub_onnx: stub/stub_classifier.onnx
+  stub_label_map: ../config/stub_label_map.json
+  allow_stub_model: true
   onnx_runtime_providers:
-    - CPUExecutionProvider
-
+  - CPUExecutionProvider
 sentence:
   duplicate_suppression: true
   low_confidence_ui: uncertain
-
 translation:
-  model_id: "csebuetnlp/banglat5_nmt_en_bn"
+  model_id: csebuetnlp/banglat5_nmt_en_bn
   tokenizer_use_fast: false
-  normalizer_repo: "git+https://github.com/csebuetnlp/normalizer"
-
+  normalizer_repo: git+https://github.com/csebuetnlp/normalizer
 backend:
-  host: "0.0.0.0"
+  host: 0.0.0.0
   port: 8000
-  websocket_path: "/ws/recognize"
-
+  websocket_path: /ws/recognize
 frontend:
   dev_port: 5173
-  vite_proxy_backend: "http://127.0.0.1:8000"
-
+  vite_proxy_backend: http://127.0.0.1:8000
 mediapipe:
   tasks_api: true
-  browser_package: "@mediapipe/tasks-vision"
-  python_landmarker: "HolisticLandmarker"
-
+  browser_package: '@mediapipe/tasks-vision'
+  python_landmarker: HolisticLandmarker
 hardware:
-  # Populated from reports/environment.json at setup; defaults for this cloud probe.
   device: cpu
   prefer_cuda: true

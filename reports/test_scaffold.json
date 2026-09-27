@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-09-26T23:00:35.926277+00:00",
+  "suite": "unit_scaffold",
+  "exit_code": 0,
+  "passed": 21,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "total": 21,
+  "stdout_tail": "....................                                                     [100%]\n20 passed in 0.06s\n",
+  "stderr_tail": "",
+  "frontend_vitest": {
+    "exit_code": 0,
+    "passed": 1,
+    "failed": 0,
+    "total": 1,
+    "stdout_tail": "\n> asl-bangla-frontend@0.0.1 test\n> vitest run\n\n\n RUN  v2.1.9 /workspace/frontend\n\n \u2713 src/config.test.ts (1 test) 2ms\n\n Test Files  1 passed (1)\n      Tests  1 passed (1)\n   Start at  23:00:38\n   Duration  162ms (transform 38ms, setup 0ms, collect 22ms, tests 2ms, environment 0ms, prepare 41ms)\n\n",
+    "stderr_tail": ""
+  }
+}

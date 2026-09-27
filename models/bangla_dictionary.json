@@ -1,0 +1,1512 @@
+{
+  "source": "label_map:/workspace/data/processed/kaggle_asl_signs/label_map.json",
+  "model_id": "csebuetnlp/banglat5_nmt_en_bn",
+  "word_count": 250,
+  "model_load_sec": 0.7107,
+  "total_build_sec": 24.6484,
+  "note": "Built from final label_map.json",
+  "dictionary": {
+    "tv": "টিভি",
+    "after": "পরে",
+    "airplane": "বিমান",
+    "all": "সব",
+    "alligator": "অ্যালিগ্যাটর",
+    "animal": "পশু",
+    "another": "অপর",
+    "any": "যে কোন",
+    "apple": "আপেল",
+    "arm": "বাহু",
+    "aunt": "মাসি",
+    "awake": "জাগরিত করা",
+    "backyard": "বাড়ির পশ্চাদ্ভাগ",
+    "bad": "খারাপ",
+    "balloon": "বেলুন",
+    "bath": "স্নান",
+    "because": "কারণ",
+    "bed": "শয্যা",
+    "bedroom": "শয়নকক্ষ",
+    "bee": "মউমাছি",
+    "before": "পূর্বে",
+    "beside": "পাশে",
+    "better": "ভাল",
+    "bird": "পাখি",
+    "black": "কালো",
+    "blow": "আঘাতকরা",
+    "blue": "নীল",
+    "boat": "নৌকা",
+    "book": "বই",
+    "boy": "বালক",
+    "brother": "ভাই",
+    "brown": "বাদামী",
+    "bug": "ছারপোকা",
+    "bye": "বিদায়",
+    "callonphone": "কলনফোন",
+    "can": "ক্ষমতা",
+    "car": "গাড়ি",
+    "carrot": "গাজর",
+    "cat": "বিড়াল",
+    "cereal": "দানাশস্য",
+    "chair": "চেয়ার",
+    "cheek": "গাল",
+    "child": "শিশু",
+    "chin": "চিবুক",
+    "chocolate": "চকলেট",
+    "clean": "পরিষ্কার",
+    "close": "সন্নিহিত",
+    "closet": "আলমারি",
+    "cloud": "মেঘ",
+    "clown": "ভাঁড়",
+    "cow": "গরু",
+    "cowboy": "রাখাল",
+    "cry": "কান্না",
+    "cut": "কাটা",
+    "cute": "সুন্দর",
+    "dad": "বাবা",
+    "dance": "নাচ",
+    "dirty": "নোংরা",
+    "dog": "কুকুর",
+    "doll": "পুতুল",
+    "donkey": "গাধা",
+    "down": "নিচে",
+    "drawer": "ড্রয়ার",
+    "drink": "পানকরা",
+    "drop": "ফোঁটা",
+    "dry": "শুষ্ক",
+    "dryer": "শুষ্ক",
+    "duck": "হাঁস",
+    "ear": "কান",
+    "elephant": "হাতি",
+    "empty": "ফাঁকা",
+    "every": "প্রত্যেক",
+    "eye": "দৃষ্টি",
+    "face": "মুখ",
+    "fall": "পতন",
+    "farm": "খামার",
+    "fast": "দ্রুত",
+    "feet": "পা",
+    "find": "খুঁজে পাওয়া",
+    "fine": "উত্তম",
+    "finger": "অঙ্গুলি",
+    "finish": "শেষ করা",
+    "fireman": "দমকলকর্মী",
+    "first": "প্রথম",
+    "fish": "মাছ",
+    "flag": "পতাকা",
+    "flower": "ফুল",
+    "food": "খাদ্য",
+    "for": "-র জন্য",
+    "frenchfries": "ফ্রেঞ্চ ফ্রাই",
+    "frog": "ব্যাঙ",
+    "garbage": "আবর্জনা",
+    "gift": "উপঢৌকন",
+    "giraffe": "জিরাফ",
+    "girl": "মেয়ে",
+    "give": "দেত্তয়া",
+    "glasswindow": "কাঁচের জানালা",
+    "go": "যাওয়া",
+    "goose": "হাঁস",
+    "grandma": "নানী",
+    "grandpa": "দাদামশায়",
+    "grass": "ঘাস",
+    "green": "সবুজ",
+    "gum": "চুইংগাম",
+    "hair": "কেশ",
+    "happy": "সুখী",
+    "hat": "টুপি",
+    "hate": "ঘৃণাকরা",
+    "have": "থাকা",
+    "haveto": "বাধ্য হত্তয়া",
+    "head": "মাথা",
+    "hear": "শোনা",
+    "helicopter": "হেলিকপ্টার",
+    "hello": "হ্যালো",
+    "hen": "মুরগি",
+    "hesheit": "হেশিট",
+    "hide": "লুকাইয়া রাখা",
+    "high": "উচ্চ",
+    "home": "গৃহ",
+    "horse": "অশ্ব",
+    "hot": "গরম",
+    "hungry": "ক্ষুধিত",
+    "icecream": "আইসক্রীম",
+    "if": "যদি",
+    "into": "মধ্যে",
+    "jacket": "জ্যাকেট",
+    "jeans": "জিন্স",
+    "jump": "লাফানো",
+    "kiss": "চুম্বন করা",
+    "kitty": "বিড়ালছানা",
+    "lamp": "বাতি",
+    "later": "পরে",
+    "like": "সদৃশ",
+    "lion": "সিংহ",
+    "lips": "ওষ্ঠ",
+    "listen": "শোনা",
+    "look": "দেখা",
+    "loud": "উচ্চৈঃস্বরে",
+    "mad": "পাগল",
+    "make": "তৈরি করা",
+    "man": "মানুষ",
+    "many": "বহু",
+    "milk": "দুধ",
+    "minemy": "তুচ্ছতাচ্ছিল্য",
+    "mitten": "নি:সৃত করা",
+    "mom": "মা",
+    "moon": "চন্দ্র",
+    "morning": "সকাল",
+    "mouse": "ইঁদুর",
+    "mouth": "মুখ",
+    "nap": "নিদ্রা",
+    "napkin": "নেপচুন",
+    "night": "রাত্রি",
+    "no": "না",
+    "noisy": "কোলাহলপূর্ণ",
+    "nose": "নাক",
+    "not": "না",
+    "now": "এখন",
+    "nuts": "বাদাম",
+    "old": "পুরোনো",
+    "on": "উপর",
+    "open": "খোলা",
+    "orange": "কমলা",
+    "outside": "বাইরে",
+    "owie": "পেঁচা",
+    "owl": "পেঁচা",
+    "pajamas": "পাজামা",
+    "pen": "কলম",
+    "pencil": "পেন্সিল",
+    "penny": "পয়সা",
+    "person": "ব্যক্তি",
+    "pig": "শূকর",
+    "pizza": "পিৎজা",
+    "please": "দয়া করা",
+    "police": "পুলিশ",
+    "pool": "পুল",
+    "potty": "পেটুক",
+    "pretend": "ভান করা",
+    "pretty": "সুন্দর",
+    "puppy": "কুকুরছানা",
+    "puzzle": "ধাঁধা",
+    "quiet": "শান্ত",
+    "radio": "রেডিও",
+    "rain": "বৃষ্টি",
+    "read": "পড়া",
+    "red": "লাল",
+    "refrigerator": "রেফ্রিজারেটর",
+    "ride": "আরোহণ করা",
+    "room": "ঘর",
+    "sad": "দু:খিত",
+    "same": "একই",
+    "say": "বলা",
+    "scissors": "কাঁচি",
+    "see": "দেখা",
+    "shhh": "শশশ",
+    "shirt": "শার্ট",
+    "shoe": "জুতা",
+    "shower": "বর্ষণ",
+    "sick": "অসুস্থ",
+    "sleep": "নিদ্রা",
+    "sleepy": "নিদ্রালু",
+    "smile": "হাসি",
+    "snack": "জলখাবার",
+    "snow": "তুষার",
+    "stairs": "সিঁড়ি",
+    "stay": "থাকা",
+    "sticky": "আঠালো",
+    "store": "ভাণ্ডার",
+    "story": "গল্প",
+    "stuck": "আটকান",
+    "sun": "সূর্য",
+    "table": "টেবিল",
+    "talk": "কথা",
+    "taste": "আস্বাদন করা",
+    "thankyou": "ধন্যবাদ",
+    "that": "যে",
+    "there": "তথায়",
+    "think": "চিন্তা করা",
+    "thirsty": "তৃষ্ণার্ত",
+    "tiger": "বাঘ",
+    "time": "সময়",
+    "tomorrow": "আগামীকাল",
+    "tongue": "জিহ্বা",
+    "tooth": "দন্ত",
+    "toothbrush": "টুথব্রাশ",
+    "touch": "স্পর্শকরা",
+    "toy": "খেলনা",
+    "tree": "বৃক্ষ",
+    "uncle": "চাচা",
+    "underwear": "অন্তর্বাস",
+    "up": "উপরে",
+    "vacuum": "ফাঁকা জায়গা",
+    "wait": "অপেক্ষা করা",
+    "wake": "জাগা",
+    "water": "জল",
+    "wet": "সিক্ত",
+    "weus": "ত্তয়েল্স",
+    "where": "কোথায়",
+    "white": "সাদা",
+    "who": "কে",
+    "why": "কেন",
+    "will": "ইচ্ছা",
+    "wolf": "নেকড়ে",
+    "yellow": "হলুদ",
+    "yes": "হাঁ",
+    "yesterday": "গতকাল",
+    "yourself": "স্বয়ং",
+    "yucky": "ভাগ্যবান",
+    "zebra": "জেব্রা",
+    "zipper": "জিপার"
+  },
+  "details": [
+    {
+      "english": "TV",
+      "bangla": "টিভি",
+      "latency_sec": 0.7068
+    },
+    {
+      "english": "after",
+      "bangla": "পরে",
+      "latency_sec": 0.0582
+    },
+    {
+      "english": "airplane",
+      "bangla": "বিমান",
+      "latency_sec": 0.0928
+    },
+    {
+      "english": "all",
+      "bangla": "সব",
+      "latency_sec": 0.05
+    },
+    {
+      "english": "alligator",
+      "bangla": "অ্যালিগ্যাটর",
+      "latency_sec": 0.1052
+    },
+    {
+      "english": "animal",
+      "bangla": "পশু",
+      "latency_sec": 0.0536
+    },
+    {
+      "english": "another",
+      "bangla": "অপর",
+      "latency_sec": 0.0499
+    },
+    {
+      "english": "any",
+      "bangla": "যে কোন",
+      "latency_sec": 0.0665
+    },
+    {
+      "english": "apple",
+      "bangla": "আপেল",
+      "latency_sec": 0.0679
+    },
+    {
+      "english": "arm",
+      "bangla": "বাহু",
+      "latency_sec": 0.0508
+    },
+    {
+      "english": "aunt",
+      "bangla": "মাসি",
+      "latency_sec": 0.0669
+    },
+    {
+      "english": "awake",
+      "bangla": "জাগরিত করা",
+      "latency_sec": 0.1577
+    },
+    {
+      "english": "backyard",
+      "bangla": "বাড়ির পশ্চাদ্ভাগ",
+      "latency_sec": 0.1395
+    },
+    {
+      "english": "bad",
+      "bangla": "খারাপ",
+      "latency_sec": 0.0837
+    },
+    {
+      "english": "balloon",
+      "bangla": "বেলুন",
+      "latency_sec": 0.0889
+    },
+    {
+      "english": "bath",
+      "bangla": "স্নান",
+      "latency_sec": 0.0681
+    },
+    {
+      "english": "because",
+      "bangla": "কারণ",
+      "latency_sec": 0.0498
+    },
+    {
+      "english": "bed",
+      "bangla": "শয্যা",
+      "latency_sec": 0.0509
+    },
+    {
+      "english": "bedroom",
+      "bangla": "শয়নকক্ষ",
+      "latency_sec": 0.0707
+    },
+    {
+      "english": "bee",
+      "bangla": "মউমাছি",
+      "latency_sec": 0.1015
+    },
+    {
+      "english": "before",
+      "bangla": "পূর্বে",
+      "latency_sec": 0.0847
+    },
+    {
+      "english": "beside",
+      "bangla": "পাশে",
+      "latency_sec": 0.0678
+    },
+    {
+      "english": "better",
+      "bangla": "ভাল",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "bird",
+      "bangla": "পাখি",
+      "latency_sec": 0.0849
+    },
+    {
+      "english": "black",
+      "bangla": "কালো",
+      "latency_sec": 0.0667
+    },
+    {
+      "english": "blow",
+      "bangla": "আঘাতকরা",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "blue",
+      "bangla": "নীল",
+      "latency_sec": 0.0718
+    },
+    {
+      "english": "boat",
+      "bangla": "নৌকা",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "book",
+      "bangla": "বই",
+      "latency_sec": 0.0501
+    },
+    {
+      "english": "boy",
+      "bangla": "বালক",
+      "latency_sec": 0.0493
+    },
+    {
+      "english": "brother",
+      "bangla": "ভাই",
+      "latency_sec": 0.0496
+    },
+    {
+      "english": "brown",
+      "bangla": "বাদামী",
+      "latency_sec": 0.1023
+    },
+    {
+      "english": "bug",
+      "bangla": "ছারপোকা",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "bye",
+      "bangla": "বিদায়",
+      "latency_sec": 0.0674
+    },
+    {
+      "english": "callonphone",
+      "bangla": "কলনফোন",
+      "latency_sec": 0.0879
+    },
+    {
+      "english": "can",
+      "bangla": "ক্ষমতা",
+      "latency_sec": 0.0678
+    },
+    {
+      "english": "car",
+      "bangla": "গাড়ি",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "carrot",
+      "bangla": "গাজর",
+      "latency_sec": 0.0711
+    },
+    {
+      "english": "cat",
+      "bangla": "বিড়াল",
+      "latency_sec": 0.1128
+    },
+    {
+      "english": "cereal",
+      "bangla": "দানাশস্য",
+      "latency_sec": 0.0879
+    },
+    {
+      "english": "chair",
+      "bangla": "চেয়ার",
+      "latency_sec": 0.0683
+    },
+    {
+      "english": "cheek",
+      "bangla": "গাল",
+      "latency_sec": 0.0504
+    },
+    {
+      "english": "child",
+      "bangla": "শিশু",
+      "latency_sec": 0.0495
+    },
+    {
+      "english": "chin",
+      "bangla": "চিবুক",
+      "latency_sec": 0.101
+    },
+    {
+      "english": "chocolate",
+      "bangla": "চকলেট",
+      "latency_sec": 0.0877
+    },
+    {
+      "english": "clean",
+      "bangla": "পরিষ্কার",
+      "latency_sec": 0.0709
+    },
+    {
+      "english": "close",
+      "bangla": "সন্নিহিত",
+      "latency_sec": 0.0841
+    },
+    {
+      "english": "closet",
+      "bangla": "আলমারি",
+      "latency_sec": 0.0843
+    },
+    {
+      "english": "cloud",
+      "bangla": "মেঘ",
+      "latency_sec": 0.1048
+    },
+    {
+      "english": "clown",
+      "bangla": "ভাঁড়",
+      "latency_sec": 0.0845
+    },
+    {
+      "english": "cow",
+      "bangla": "গরু",
+      "latency_sec": 0.0506
+    },
+    {
+      "english": "cowboy",
+      "bangla": "রাখাল",
+      "latency_sec": 0.072
+    },
+    {
+      "english": "cry",
+      "bangla": "কান্না",
+      "latency_sec": 0.0676
+    },
+    {
+      "english": "cut",
+      "bangla": "কাটা",
+      "latency_sec": 0.0864
+    },
+    {
+      "english": "cute",
+      "bangla": "সুন্দর",
+      "latency_sec": 0.0847
+    },
+    {
+      "english": "dad",
+      "bangla": "বাবা",
+      "latency_sec": 0.0507
+    },
+    {
+      "english": "dance",
+      "bangla": "নাচ",
+      "latency_sec": 0.0675
+    },
+    {
+      "english": "dirty",
+      "bangla": "নোংরা",
+      "latency_sec": 0.0709
+    },
+    {
+      "english": "dog",
+      "bangla": "কুকুর",
+      "latency_sec": 0.0687
+    },
+    {
+      "english": "doll",
+      "bangla": "পুতুল",
+      "latency_sec": 0.0672
+    },
+    {
+      "english": "donkey",
+      "bangla": "গাধা",
+      "latency_sec": 0.0847
+    },
+    {
+      "english": "down",
+      "bangla": "নিচে",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "drawer",
+      "bangla": "ড্রয়ার",
+      "latency_sec": 0.0888
+    },
+    {
+      "english": "drink",
+      "bangla": "পানকরা",
+      "latency_sec": 0.0704
+    },
+    {
+      "english": "drop",
+      "bangla": "ফোঁটা",
+      "latency_sec": 0.0734
+    },
+    {
+      "english": "dry",
+      "bangla": "শুষ্ক",
+      "latency_sec": 0.0842
+    },
+    {
+      "english": "dryer",
+      "bangla": "শুষ্ক",
+      "latency_sec": 0.1047
+    },
+    {
+      "english": "duck",
+      "bangla": "হাঁস",
+      "latency_sec": 0.067
+    },
+    {
+      "english": "ear",
+      "bangla": "কান",
+      "latency_sec": 0.0669
+    },
+    {
+      "english": "elephant",
+      "bangla": "হাতি",
+      "latency_sec": 0.0712
+    },
+    {
+      "english": "empty",
+      "bangla": "ফাঁকা",
+      "latency_sec": 0.0703
+    },
+    {
+      "english": "every",
+      "bangla": "প্রত্যেক",
+      "latency_sec": 0.0491
+    },
+    {
+      "english": "eye",
+      "bangla": "দৃষ্টি",
+      "latency_sec": 0.0504
+    },
+    {
+      "english": "face",
+      "bangla": "মুখ",
+      "latency_sec": 0.0993
+    },
+    {
+      "english": "fall",
+      "bangla": "পতন",
+      "latency_sec": 0.0662
+    },
+    {
+      "english": "farm",
+      "bangla": "খামার",
+      "latency_sec": 0.0667
+    },
+    {
+      "english": "fast",
+      "bangla": "দ্রুত",
+      "latency_sec": 0.1017
+    },
+    {
+      "english": "feet",
+      "bangla": "পা",
+      "latency_sec": 0.0532
+    },
+    {
+      "english": "find",
+      "bangla": "খুঁজে পাওয়া",
+      "latency_sec": 0.0996
+    },
+    {
+      "english": "fine",
+      "bangla": "উত্তম",
+      "latency_sec": 0.0501
+    },
+    {
+      "english": "finger",
+      "bangla": "অঙ্গুলি",
+      "latency_sec": 0.0878
+    },
+    {
+      "english": "finish",
+      "bangla": "শেষ করা",
+      "latency_sec": 0.0701
+    },
+    {
+      "english": "fireman",
+      "bangla": "দমকলকর্মী",
+      "latency_sec": 0.1894
+    },
+    {
+      "english": "first",
+      "bangla": "প্রথম",
+      "latency_sec": 0.0833
+    },
+    {
+      "english": "fish",
+      "bangla": "মাছ",
+      "latency_sec": 0.0677
+    },
+    {
+      "english": "flag",
+      "bangla": "পতাকা",
+      "latency_sec": 0.0703
+    },
+    {
+      "english": "flower",
+      "bangla": "ফুল",
+      "latency_sec": 0.07
+    },
+    {
+      "english": "food",
+      "bangla": "খাদ্য",
+      "latency_sec": 0.0492
+    },
+    {
+      "english": "for",
+      "bangla": "-র জন্য",
+      "latency_sec": 0.084
+    },
+    {
+      "english": "frenchfries",
+      "bangla": "ফ্রেঞ্চ ফ্রাই",
+      "latency_sec": 0.0731
+    },
+    {
+      "english": "frog",
+      "bangla": "ব্যাঙ",
+      "latency_sec": 0.0915
+    },
+    {
+      "english": "garbage",
+      "bangla": "আবর্জনা",
+      "latency_sec": 0.0753
+    },
+    {
+      "english": "gift",
+      "bangla": "উপঢৌকন",
+      "latency_sec": 0.1047
+    },
+    {
+      "english": "giraffe",
+      "bangla": "জিরাফ",
+      "latency_sec": 0.1224
+    },
+    {
+      "english": "girl",
+      "bangla": "মেয়ে",
+      "latency_sec": 0.068
+    },
+    {
+      "english": "give",
+      "bangla": "দেত্তয়া",
+      "latency_sec": 0.0834
+    },
+    {
+      "english": "glasswindow",
+      "bangla": "কাঁচের জানালা",
+      "latency_sec": 0.0979
+    },
+    {
+      "english": "go",
+      "bangla": "যাওয়া",
+      "latency_sec": 0.0667
+    },
+    {
+      "english": "goose",
+      "bangla": "হাঁস",
+      "latency_sec": 0.0674
+    },
+    {
+      "english": "grandma",
+      "bangla": "নানী",
+      "latency_sec": 0.0708
+    },
+    {
+      "english": "grandpa",
+      "bangla": "দাদামশায়",
+      "latency_sec": 0.0705
+    },
+    {
+      "english": "grass",
+      "bangla": "ঘাস",
+      "latency_sec": 0.0862
+    },
+    {
+      "english": "green",
+      "bangla": "সবুজ",
+      "latency_sec": 0.0727
+    },
+    {
+      "english": "gum",
+      "bangla": "চুইংগাম",
+      "latency_sec": 0.0848
+    },
+    {
+      "english": "hair",
+      "bangla": "কেশ",
+      "latency_sec": 0.0681
+    },
+    {
+      "english": "happy",
+      "bangla": "সুখী",
+      "latency_sec": 0.0662
+    },
+    {
+      "english": "hat",
+      "bangla": "টুপি",
+      "latency_sec": 0.0681
+    },
+    {
+      "english": "hate",
+      "bangla": "ঘৃণাকরা",
+      "latency_sec": 0.0847
+    },
+    {
+      "english": "have",
+      "bangla": "থাকা",
+      "latency_sec": 0.0665
+    },
+    {
+      "english": "haveto",
+      "bangla": "বাধ্য হত্তয়া",
+      "latency_sec": 0.1008
+    },
+    {
+      "english": "head",
+      "bangla": "মাথা",
+      "latency_sec": 0.0827
+    },
+    {
+      "english": "hear",
+      "bangla": "শোনা",
+      "latency_sec": 0.0662
+    },
+    {
+      "english": "helicopter",
+      "bangla": "হেলিকপ্টার",
+      "latency_sec": 0.1055
+    },
+    {
+      "english": "hello",
+      "bangla": "হ্যালো",
+      "latency_sec": 0.0713
+    },
+    {
+      "english": "hen",
+      "bangla": "মুরগি",
+      "latency_sec": 0.0684
+    },
+    {
+      "english": "hesheit",
+      "bangla": "হেশিট",
+      "latency_sec": 0.0881
+    },
+    {
+      "english": "hide",
+      "bangla": "লুকাইয়া রাখা",
+      "latency_sec": 0.1081
+    },
+    {
+      "english": "high",
+      "bangla": "উচ্চ",
+      "latency_sec": 0.0832
+    },
+    {
+      "english": "home",
+      "bangla": "গৃহ",
+      "latency_sec": 0.083
+    },
+    {
+      "english": "horse",
+      "bangla": "অশ্ব",
+      "latency_sec": 0.1221
+    },
+    {
+      "english": "hot",
+      "bangla": "গরম",
+      "latency_sec": 0.0518
+    },
+    {
+      "english": "hungry",
+      "bangla": "ক্ষুধিত",
+      "latency_sec": 0.1074
+    },
+    {
+      "english": "icecream",
+      "bangla": "আইসক্রীম",
+      "latency_sec": 0.0882
+    },
+    {
+      "english": "if",
+      "bangla": "যদি",
+      "latency_sec": 0.0668
+    },
+    {
+      "english": "into",
+      "bangla": "মধ্যে",
+      "latency_sec": 0.0493
+    },
+    {
+      "english": "jacket",
+      "bangla": "জ্যাকেট",
+      "latency_sec": 0.0509
+    },
+    {
+      "english": "jeans",
+      "bangla": "জিন্স",
+      "latency_sec": 0.0507
+    },
+    {
+      "english": "jump",
+      "bangla": "লাফানো",
+      "latency_sec": 0.0678
+    },
+    {
+      "english": "kiss",
+      "bangla": "চুম্বন করা",
+      "latency_sec": 0.0678
+    },
+    {
+      "english": "kitty",
+      "bangla": "বিড়ালছানা",
+      "latency_sec": 0.0714
+    },
+    {
+      "english": "lamp",
+      "bangla": "বাতি",
+      "latency_sec": 0.051
+    },
+    {
+      "english": "later",
+      "bangla": "পরে",
+      "latency_sec": 0.0677
+    },
+    {
+      "english": "like",
+      "bangla": "সদৃশ",
+      "latency_sec": 0.0666
+    },
+    {
+      "english": "lion",
+      "bangla": "সিংহ",
+      "latency_sec": 0.0677
+    },
+    {
+      "english": "lips",
+      "bangla": "ওষ্ঠ",
+      "latency_sec": 0.0849
+    },
+    {
+      "english": "listen",
+      "bangla": "শোনা",
+      "latency_sec": 0.0675
+    },
+    {
+      "english": "look",
+      "bangla": "দেখা",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "loud",
+      "bangla": "উচ্চৈঃস্বরে",
+      "latency_sec": 0.0845
+    },
+    {
+      "english": "mad",
+      "bangla": "পাগল",
+      "latency_sec": 0.0504
+    },
+    {
+      "english": "make",
+      "bangla": "তৈরি করা",
+      "latency_sec": 0.0666
+    },
+    {
+      "english": "man",
+      "bangla": "মানুষ",
+      "latency_sec": 0.0501
+    },
+    {
+      "english": "many",
+      "bangla": "বহু",
+      "latency_sec": 0.0696
+    },
+    {
+      "english": "milk",
+      "bangla": "দুধ",
+      "latency_sec": 0.0865
+    },
+    {
+      "english": "minemy",
+      "bangla": "তুচ্ছতাচ্ছিল্য",
+      "latency_sec": 0.1221
+    },
+    {
+      "english": "mitten",
+      "bangla": "নি:সৃত করা",
+      "latency_sec": 0.1787
+    },
+    {
+      "english": "mom",
+      "bangla": "মা",
+      "latency_sec": 0.0503
+    },
+    {
+      "english": "moon",
+      "bangla": "চন্দ্র",
+      "latency_sec": 0.0691
+    },
+    {
+      "english": "morning",
+      "bangla": "সকাল",
+      "latency_sec": 0.0836
+    },
+    {
+      "english": "mouse",
+      "bangla": "ইঁদুর",
+      "latency_sec": 0.0849
+    },
+    {
+      "english": "mouth",
+      "bangla": "মুখ",
+      "latency_sec": 0.1052
+    },
+    {
+      "english": "nap",
+      "bangla": "নিদ্রা",
+      "latency_sec": 0.0844
+    },
+    {
+      "english": "napkin",
+      "bangla": "নেপচুন",
+      "latency_sec": 0.1045
+    },
+    {
+      "english": "night",
+      "bangla": "রাত্রি",
+      "latency_sec": 0.0496
+    },
+    {
+      "english": "no",
+      "bangla": "না",
+      "latency_sec": 0.067
+    },
+    {
+      "english": "noisy",
+      "bangla": "কোলাহলপূর্ণ",
+      "latency_sec": 0.0878
+    },
+    {
+      "english": "nose",
+      "bangla": "নাক",
+      "latency_sec": 0.0845
+    },
+    {
+      "english": "not",
+      "bangla": "না",
+      "latency_sec": 0.0667
+    },
+    {
+      "english": "now",
+      "bangla": "এখন",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "nuts",
+      "bangla": "বাদাম",
+      "latency_sec": 0.0844
+    },
+    {
+      "english": "old",
+      "bangla": "পুরোনো",
+      "latency_sec": 0.0493
+    },
+    {
+      "english": "on",
+      "bangla": "উপর",
+      "latency_sec": 0.0669
+    },
+    {
+      "english": "open",
+      "bangla": "খোলা",
+      "latency_sec": 0.0668
+    },
+    {
+      "english": "orange",
+      "bangla": "কমলা",
+      "latency_sec": 0.1009
+    },
+    {
+      "english": "outside",
+      "bangla": "বাইরে",
+      "latency_sec": 0.0675
+    },
+    {
+      "english": "owie",
+      "bangla": "পেঁচা",
+      "latency_sec": 0.122
+    },
+    {
+      "english": "owl",
+      "bangla": "পেঁচা",
+      "latency_sec": 0.0875
+    },
+    {
+      "english": "pajamas",
+      "bangla": "পাজামা",
+      "latency_sec": 0.0721
+    },
+    {
+      "english": "pen",
+      "bangla": "কলম",
+      "latency_sec": 0.0843
+    },
+    {
+      "english": "pencil",
+      "bangla": "পেন্সিল",
+      "latency_sec": 0.0537
+    },
+    {
+      "english": "penny",
+      "bangla": "পয়সা",
+      "latency_sec": 0.0918
+    },
+    {
+      "english": "person",
+      "bangla": "ব্যক্তি",
+      "latency_sec": 0.0498
+    },
+    {
+      "english": "pig",
+      "bangla": "শূকর",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "pizza",
+      "bangla": "পিৎজা",
+      "latency_sec": 0.087
+    },
+    {
+      "english": "please",
+      "bangla": "দয়া করা",
+      "latency_sec": 0.0663
+    },
+    {
+      "english": "police",
+      "bangla": "পুলিশ",
+      "latency_sec": 0.0702
+    },
+    {
+      "english": "pool",
+      "bangla": "পুল",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "potty",
+      "bangla": "পেটুক",
+      "latency_sec": 0.0701
+    },
+    {
+      "english": "pretend",
+      "bangla": "ভান করা",
+      "latency_sec": 0.0864
+    },
+    {
+      "english": "pretty",
+      "bangla": "সুন্দর",
+      "latency_sec": 0.1038
+    },
+    {
+      "english": "puppy",
+      "bangla": "কুকুরছানা",
+      "latency_sec": 0.0713
+    },
+    {
+      "english": "puzzle",
+      "bangla": "ধাঁধা",
+      "latency_sec": 0.0878
+    },
+    {
+      "english": "quiet",
+      "bangla": "শান্ত",
+      "latency_sec": 0.0866
+    },
+    {
+      "english": "radio",
+      "bangla": "রেডিও",
+      "latency_sec": 0.0673
+    },
+    {
+      "english": "rain",
+      "bangla": "বৃষ্টি",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "read",
+      "bangla": "পড়া",
+      "latency_sec": 0.0994
+    },
+    {
+      "english": "red",
+      "bangla": "লাল",
+      "latency_sec": 0.0704
+    },
+    {
+      "english": "refrigerator",
+      "bangla": "রেফ্রিজারেটর",
+      "latency_sec": 0.1092
+    },
+    {
+      "english": "ride",
+      "bangla": "আরোহণ করা",
+      "latency_sec": 0.1012
+    },
+    {
+      "english": "room",
+      "bangla": "ঘর",
+      "latency_sec": 0.0525
+    },
+    {
+      "english": "sad",
+      "bangla": "দু:খিত",
+      "latency_sec": 0.1019
+    },
+    {
+      "english": "same",
+      "bangla": "একই",
+      "latency_sec": 0.0498
+    },
+    {
+      "english": "say",
+      "bangla": "বলা",
+      "latency_sec": 0.0661
+    },
+    {
+      "english": "scissors",
+      "bangla": "কাঁচি",
+      "latency_sec": 0.088
+    },
+    {
+      "english": "see",
+      "bangla": "দেখা",
+      "latency_sec": 0.0668
+    },
+    {
+      "english": "shhh",
+      "bangla": "শশশ",
+      "latency_sec": 0.1243
+    },
+    {
+      "english": "shirt",
+      "bangla": "শার্ট",
+      "latency_sec": 0.0766
+    },
+    {
+      "english": "shoe",
+      "bangla": "জুতা",
+      "latency_sec": 0.087
+    },
+    {
+      "english": "shower",
+      "bangla": "বর্ষণ",
+      "latency_sec": 0.0688
+    },
+    {
+      "english": "sick",
+      "bangla": "অসুস্থ",
+      "latency_sec": 0.0683
+    },
+    {
+      "english": "sleep",
+      "bangla": "নিদ্রা",
+      "latency_sec": 0.1065
+    },
+    {
+      "english": "sleepy",
+      "bangla": "নিদ্রালু",
+      "latency_sec": 0.0891
+    },
+    {
+      "english": "smile",
+      "bangla": "হাসি",
+      "latency_sec": 0.071
+    },
+    {
+      "english": "snack",
+      "bangla": "জলখাবার",
+      "latency_sec": 0.0711
+    },
+    {
+      "english": "snow",
+      "bangla": "তুষার",
+      "latency_sec": 0.0703
+    },
+    {
+      "english": "stairs",
+      "bangla": "সিঁড়ি",
+      "latency_sec": 0.0902
+    },
+    {
+      "english": "stay",
+      "bangla": "থাকা",
+      "latency_sec": 0.0676
+    },
+    {
+      "english": "sticky",
+      "bangla": "আঠালো",
+      "latency_sec": 0.0881
+    },
+    {
+      "english": "store",
+      "bangla": "ভাণ্ডার",
+      "latency_sec": 0.0502
+    },
+    {
+      "english": "story",
+      "bangla": "গল্প",
+      "latency_sec": 0.0498
+    },
+    {
+      "english": "stuck",
+      "bangla": "আটকান",
+      "latency_sec": 0.0844
+    },
+    {
+      "english": "sun",
+      "bangla": "সূর্য",
+      "latency_sec": 0.049
+    },
+    {
+      "english": "table",
+      "bangla": "টেবিল",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "talk",
+      "bangla": "কথা",
+      "latency_sec": 0.0657
+    },
+    {
+      "english": "taste",
+      "bangla": "আস্বাদন করা",
+      "latency_sec": 0.1043
+    },
+    {
+      "english": "thankyou",
+      "bangla": "ধন্যবাদ",
+      "latency_sec": 0.0673
+    },
+    {
+      "english": "that",
+      "bangla": "যে",
+      "latency_sec": 0.0505
+    },
+    {
+      "english": "there",
+      "bangla": "তথায়",
+      "latency_sec": 0.0662
+    },
+    {
+      "english": "think",
+      "bangla": "চিন্তা করা",
+      "latency_sec": 0.0665
+    },
+    {
+      "english": "thirsty",
+      "bangla": "তৃষ্ণার্ত",
+      "latency_sec": 0.0887
+    },
+    {
+      "english": "tiger",
+      "bangla": "বাঘ",
+      "latency_sec": 0.0506
+    },
+    {
+      "english": "time",
+      "bangla": "সময়",
+      "latency_sec": 0.0662
+    },
+    {
+      "english": "tomorrow",
+      "bangla": "আগামীকাল",
+      "latency_sec": 0.0879
+    },
+    {
+      "english": "tongue",
+      "bangla": "জিহ্বা",
+      "latency_sec": 0.0874
+    },
+    {
+      "english": "tooth",
+      "bangla": "দন্ত",
+      "latency_sec": 0.1067
+    },
+    {
+      "english": "toothbrush",
+      "bangla": "টুথব্রাশ",
+      "latency_sec": 0.1051
+    },
+    {
+      "english": "touch",
+      "bangla": "স্পর্শকরা",
+      "latency_sec": 0.0671
+    },
+    {
+      "english": "toy",
+      "bangla": "খেলনা",
+      "latency_sec": 0.1009
+    },
+    {
+      "english": "tree",
+      "bangla": "বৃক্ষ",
+      "latency_sec": 0.0656
+    },
+    {
+      "english": "uncle",
+      "bangla": "চাচা",
+      "latency_sec": 0.0497
+    },
+    {
+      "english": "underwear",
+      "bangla": "অন্তর্বাস",
+      "latency_sec": 0.0706
+    },
+    {
+      "english": "up",
+      "bangla": "উপরে",
+      "latency_sec": 0.0665
+    },
+    {
+      "english": "vacuum",
+      "bangla": "ফাঁকা জায়গা",
+      "latency_sec": 0.0706
+    },
+    {
+      "english": "wait",
+      "bangla": "অপেক্ষা করা",
+      "latency_sec": 0.0657
+    },
+    {
+      "english": "wake",
+      "bangla": "জাগা",
+      "latency_sec": 0.0683
+    },
+    {
+      "english": "water",
+      "bangla": "জল",
+      "latency_sec": 0.0657
+    },
+    {
+      "english": "wet",
+      "bangla": "সিক্ত",
+      "latency_sec": 0.0844
+    },
+    {
+      "english": "weus",
+      "bangla": "ত্তয়েল্স",
+      "latency_sec": 0.1011
+    },
+    {
+      "english": "where",
+      "bangla": "কোথায়",
+      "latency_sec": 0.0829
+    },
+    {
+      "english": "white",
+      "bangla": "সাদা",
+      "latency_sec": 0.0703
+    },
+    {
+      "english": "who",
+      "bangla": "কে",
+      "latency_sec": 0.0496
+    },
+    {
+      "english": "why",
+      "bangla": "কেন",
+      "latency_sec": 0.0664
+    },
+    {
+      "english": "will",
+      "bangla": "ইচ্ছা",
+      "latency_sec": 0.0654
+    },
+    {
+      "english": "wolf",
+      "bangla": "নেকড়ে",
+      "latency_sec": 0.0869
+    },
+    {
+      "english": "yellow",
+      "bangla": "হলুদ",
+      "latency_sec": 0.0673
+    },
+    {
+      "english": "yes",
+      "bangla": "হাঁ",
+      "latency_sec": 0.0505
+    },
+    {
+      "english": "yesterday",
+      "bangla": "গতকাল",
+      "latency_sec": 0.0874
+    },
+    {
+      "english": "yourself",
+      "bangla": "স্বয়ং",
+      "latency_sec": 0.068
+    },
+    {
+      "english": "yucky",
+      "bangla": "ভাগ্যবান",
+      "latency_sec": 0.0711
+    },
+    {
+      "english": "zebra",
+      "bangla": "জেব্রা",
+      "latency_sec": 0.0869
+    },
+    {
+      "english": "zipper",
+      "bangla": "জিপার",
+      "latency_sec": 0.0703
+    }
+  ]
+}

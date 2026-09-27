@@ -1,0 +1,76 @@
+{
+  "backend_base": "http://127.0.0.1:8000",
+  "vite_proxy": {
+    "api": "/api",
+    "ws": "/ws"
+  },
+  "vite_mock_default": "false (opt-in mock via VITE_MOCK_WS=true)",
+  "websocket_path": "/ws/recognize",
+  "landmark_feature_dim": 392,
+  "landmark_stream": "browser MediaPipe → landmark_window JSON (no video)",
+  "health_ok": true,
+  "health": {
+    "status": "ok",
+    "model_loaded": true,
+    "model_path": "/workspace/models/served/model.onnx",
+    "is_stub": false,
+    "model_error": null,
+    "bangla_dictionary_loaded": true,
+    "bangla_dictionary_error": null
+  },
+  "websocket_status": {
+    "type": "status",
+    "connection": "connected",
+    "message": "ready"
+  },
+  "websocket_ok": true,
+  "sample_prediction": {
+    "type": "prediction",
+    "word": "another",
+    "confidence": 0.04854375259815882,
+    "top_k": [
+      {
+        "word": "another",
+        "confidence": 0.04854375259815882
+      },
+      {
+        "word": "arm",
+        "confidence": 0.048162835696919405
+      },
+      {
+        "word": "not",
+        "confidence": 0.03215942018021952
+      },
+      {
+        "word": "jacket",
+        "confidence": 0.025398668993536707
+      },
+      {
+        "word": "open",
+        "confidence": 0.021438693000447043
+      }
+    ],
+    "model_version": "model",
+    "vocab_size": 250,
+    "latency_ms": 2.7837280031235423,
+    "committed_word": null
+  },
+  "translate_word_ok": true,
+  "translate_words_ok": true,
+  "translate_sentence_ok": true,
+  "sample_translate_word": {
+    "english": "hello",
+    "bangla": "হ্যালো",
+    "source": "dictionary"
+  },
+  "sample_translate_sentence": {
+    "english": "hello friend",
+    "normalized_english": "hello friend",
+    "bangla": "হ্যালো বন্ধু",
+    "latency_sec": 0.1072202869981993,
+    "model_id": "csebuetnlp/banglat5_nmt_en_bn"
+  },
+  "env_example_mock_ws_false": true,
+  "frontend_vitest_ok": true,
+  "ok": true
+}
