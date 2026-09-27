@@ -39,6 +39,7 @@ def test_normalize_and_pack_shape() -> None:
     holistic = _synthetic_holistic_frames(8)
     packed = normalize_and_pack(holistic)
     assert packed.shape == (8, 392)
+    assert np.isfinite(packed).all()
     # Shoulders centered: left shoulder x near -0.5, right near +0.5 after scale
     selected = normalize_sequence(holistic)
     left_idx = SELECTED_HOLISTIC_INDICES.index(11)
@@ -94,6 +95,51 @@ def test_label_map_and_splits(tmp_path: Path) -> None:
         splits["participants"]["test"]
     )
     assert participants == {"p1", "p2", "p3", "p4"}
+
+
+def test_normalize_nan_shoulders_produces_finite_packed() -> None:
+    holistic = _synthetic_holistic_frames(4)
+    holistic[:, 11, :] = np.nan
+    holistic[:, 12, :] = np.nan
+    packed = normalize_and_pack(holistic)
+    assert packed.shape == (4, 392)
+    assert np.isfinite(packed).all()
+
+
+def test_long_format_holistic_offsets(tmp_path: Path) -> None:
+    """Left hand landmark_index 0 must map to holistic index 501, not 33."""
+    rows = []
+    frame = 0
+    for i in range(33):
+        rows.append(
+            {
+                "frame": frame,
+                "row_id": len(rows),
+                "type": "pose",
+                "landmark_index": i,
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+            }
+        )
+    rows.append(
+        {
+            "frame": frame,
+            "row_id": len(rows),
+            "type": "left_hand",
+            "landmark_index": 0,
+            "x": 1.0,
+            "y": 2.0,
+            "z": 3.0,
+        }
+    )
+    df = pd.DataFrame(rows)
+    pq = tmp_path / "long.parquet"
+    df.to_parquet(pq, index=False)
+    arr = load_parquet_landmarks(pq)
+    assert arr.shape == (1, 543, 3)
+    np.testing.assert_allclose(arr[0, 501], [1.0, 2.0, 3.0])
+    assert np.allclose(arr[0, 33], 0.0)
 
 
 def test_run_preprocessing_waiting_status(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

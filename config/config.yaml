@@ -9,8 +9,6 @@ paths:
   bangla_dictionary_filename: bangla_dictionary.json
   label_map_filename: label_map.json
 datasets:
-  # Auth: KAGGLE_API_TOKEN (or ~/.kaggle/access_token) or legacy KAGGLE_USERNAME+KAGGLE_KEY.
-  # Must join https://www.kaggle.com/competitions/asl-signs and accept rules before download.
   kaggle_competition: asl-signs
   kaggle_raw_subdir: kaggle_asl_signs
   asl_citizen_raw_subdir: asl_citizen
@@ -188,6 +186,7 @@ training:
   base_lr: 0.0003
   base_lr_batch_size: 128
   lr_warmup_ratio: 0.05
+  grad_clip_norm: 1.0
   lr_schedule: cosine
   num_workers: 3
   mixed_precision_when_cuda: true
@@ -205,9 +204,9 @@ inference:
   sliding_window_seconds_min: 1.0
   sliding_window_seconds_max: 1.5
   sliding_window_overlap: 0.5
-  served_onnx: "served/model.onnx"
-  stub_onnx: "stub/stub_classifier.onnx"
-  stub_label_map: "../config/stub_label_map.json"
+  served_onnx: served/model.onnx
+  stub_onnx: stub/stub_classifier.onnx
+  stub_label_map: ../config/stub_label_map.json
   allow_stub_model: true
   onnx_runtime_providers:
   - CPUExecutionProvider

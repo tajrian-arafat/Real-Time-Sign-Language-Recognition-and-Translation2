@@ -10,6 +10,7 @@ from ml.preprocess.landmark_spec import (
     SHOULDER_LEFT_HOLISTIC,
     SHOULDER_RIGHT_HOLISTIC,
 )
+from ml.preprocess.sanitize import ensure_finite_features, sanitize_holistic_frames, shoulder_anchor
 
 
 def _index_in_selected(holistic_index: int) -> int:
@@ -34,19 +35,36 @@ def normalize_sequence(
     if frames_holistic.ndim != 3 or frames_holistic.shape[1] != 543:
         raise ValueError(f"Expected (T, 543, 3), got {frames_holistic.shape}")
 
-    selected = frames_holistic[:, SELECTED_HOLISTIC_INDICES, :].astype(np.float32, copy=True)
+    clean = sanitize_holistic_frames(frames_holistic)
+    selected = clean[:, SELECTED_HOLISTIC_INDICES, :].astype(np.float32, copy=True)
 
-    left_sel = _index_in_selected(shoulder_left)
-    right_sel = _index_in_selected(shoulder_right)
+    last_mid: np.ndarray | None = None
+    last_width: float = 1.0
 
     for t in range(selected.shape[0]):
-        left = selected[t, left_sel]
-        right = selected[t, right_sel]
-        mid = (left + right) * 0.5
-        width = float(np.linalg.norm(left - right))
-        if width < eps:
+        holistic_frame = clean[t]
+        anchor = shoulder_anchor(holistic_frame)
+        if anchor is not None:
+            mid, width = anchor
+            last_mid = mid
+            last_width = width
+        elif last_mid is not None:
+            mid = last_mid
+            width = last_width
+        else:
+            mid = np.zeros(3, dtype=np.float64)
             width = 1.0
-        selected[t] = (selected[t] - mid) / width
+
+        width = max(float(width), eps)
+        selected[t] = (selected[t] - mid.astype(np.float32)) / np.float32(width)
+
+        # Missing landmark slots stay at 0 after centering (masked as absent).
+        for j in range(selected.shape[1]):
+            src_idx = SELECTED_HOLISTIC_INDICES[j]
+            if not np.all(np.isfinite(holistic_frame[src_idx])) or np.linalg.norm(
+                holistic_frame[src_idx]
+            ) <= 1e-8:
+                selected[t, j, :] = 0.0
 
     return selected
 
@@ -69,7 +87,8 @@ def pack_features(normalized_selected: np.ndarray) -> np.ndarray:
         np.float32
     )
     flags = np.stack([left_present, right_present], axis=1)
-    return np.concatenate([flat, flags], axis=1).astype(np.float32)
+    packed = np.concatenate([flat, flags], axis=1).astype(np.float32)
+    return ensure_finite_features(packed)
 
 
 def normalize_and_pack(frames_holistic: np.ndarray) -> np.ndarray:

@@ -127,6 +127,10 @@ def _confusion_matrix(y_true: np.ndarray, y_pred: np.ndarray, num_classes: int) 
 
 
 def _top_k_accuracy(y_true: np.ndarray, top_k: np.ndarray, k: int) -> float:
+    if len(y_true) == 0 or top_k.size == 0:
+        return 0.0
+    if top_k.ndim == 1:
+        top_k = top_k.reshape(len(y_true), 1)
     if top_k.shape[1] < k:
         k = top_k.shape[1]
     hits = 0

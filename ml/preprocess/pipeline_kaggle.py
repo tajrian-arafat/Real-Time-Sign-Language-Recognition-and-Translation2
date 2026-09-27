@@ -51,6 +51,8 @@ def process_sequence(
     holistic = load_parquet_landmarks(parquet_path)
     features = normalize_and_pack(holistic)
     resampled, mask = resample_sequence(features, target_length=sequence_length)
+    if not np.isfinite(resampled).all():
+        raise ValueError(f"non-finite tensor after preprocessing: {parquet_path}")
     return resampled, mask
 
 

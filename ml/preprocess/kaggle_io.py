@@ -9,11 +9,15 @@ import pandas as pd
 HOLISTIC_LANDMARK_COUNT = 543
 META_COLUMNS = {"frame", "row_id", "sequence_id", "type", "landmark_index"}
 
+# MediaPipe Holistic flat layout: pose(33) + face(468) + left_hand(21) + right_hand(21) = 543.
+_POSE_COUNT = 33
+_FACE_COUNT = 468
+_HAND_COUNT = 21
 _TYPE_TO_HOLISTIC_OFFSET: dict[str, int] = {
     "pose": 0,
-    "left_hand": 33,
-    "right_hand": 54,
-    "face": 75,
+    "face": _POSE_COUNT,
+    "left_hand": _POSE_COUNT + _FACE_COUNT,
+    "right_hand": _POSE_COUNT + _FACE_COUNT + _HAND_COUNT,
 }
 
 
@@ -44,6 +48,7 @@ def _load_long_format_landmarks(df: pd.DataFrame) -> np.ndarray:
     out[frame_index, holistic_idx, 0] = coords[:, 0]
     out[frame_index, holistic_idx, 1] = coords[:, 1]
     out[frame_index, holistic_idx, 2] = coords[:, 2]
+    out = np.nan_to_num(out, nan=0.0, posinf=0.0, neginf=0.0)
     return out
 
 
@@ -64,6 +69,7 @@ def load_parquet_landmarks(path: Path) -> np.ndarray:
     coord_cols = [c for c in df.columns if c not in META_COLUMNS]
     if len(coord_cols) == HOLISTIC_LANDMARK_COUNT * 3:
         values = df[coord_cols].to_numpy(dtype=np.float32)
+        values = np.nan_to_num(values, nan=0.0, posinf=0.0, neginf=0.0)
         return values.reshape(len(df), HOLISTIC_LANDMARK_COUNT, 3)
 
     # Named columns x_i, y_i, z_i

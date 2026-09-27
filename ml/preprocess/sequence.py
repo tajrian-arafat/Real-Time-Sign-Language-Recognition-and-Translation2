@@ -35,6 +35,8 @@ def resample_sequence(
     for j in range(feat_dim):
         out[:, j] = np.interp(dst_x, src_x, features[:, j])
 
+    out = np.nan_to_num(out, nan=0.0, posinf=0.0, neginf=0.0)
+
     if src_len >= target_length:
         mask = np.ones((target_length,), dtype=np.float32)
     else:

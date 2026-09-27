@@ -106,6 +106,7 @@ def _run_epoch(
     scheduler: _WarmupCosineScheduler | None,
     max_steps: int | None,
     global_step: int,
+    grad_clip_norm: float = 0.0,
 ) -> tuple[float, float, int]:
     is_train = optimizer is not None
     if is_train:
@@ -128,6 +129,8 @@ def _run_epoch(
             if is_train:
                 optimizer.zero_grad(set_to_none=True)
                 loss.backward()
+                if grad_clip_norm > 0:
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), grad_clip_norm)
                 optimizer.step()
                 if scheduler is not None:
                     scheduler.step()
@@ -136,6 +139,9 @@ def _run_epoch(
         total_loss += float(loss.item())
         total_acc += _top1_accuracy(logits.detach(), y)
         batches += 1
+
+        if is_train and (not math.isfinite(float(loss.item()))):
+            raise RuntimeError(f"Non-finite training loss at step {steps}")
 
         if is_train and max_steps is not None and steps >= max_steps:
             break
@@ -195,6 +201,18 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
     parser.add_argument("--max-steps", type=int, default=None, help="Stop after N train steps")
     parser.add_argument("--run-name", type=str, default="kaggle_baseline")
     parser.add_argument("--force-synthetic", action="store_true")
+    parser.add_argument(
+        "--learning-rate",
+        type=float,
+        default=None,
+        help="Override LR (default: scaled from config; use 1e-4 for stable Kaggle runs)",
+    )
+    parser.add_argument(
+        "--grad-clip-norm",
+        type=float,
+        default=None,
+        help="Max gradient norm (default: training.grad_clip_norm or 1.0 on real data)",
+    )
     args = parser.parse_args(argv)
 
     config = load_config()
@@ -234,7 +252,13 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
     label_smoothing = float(training_cfg.get("label_smoothing", 0.1))
     criterion = nn.CrossEntropyLoss(label_smoothing=label_smoothing)
     weight_decay = float(training_cfg.get("weight_decay", 0.01))
-    lr = _scaled_lr(config, batch_size)
+    if args.learning_rate is not None:
+        lr = float(args.learning_rate)
+    else:
+        lr = _scaled_lr(config, batch_size)
+    grad_clip = args.grad_clip_norm
+    if grad_clip is None:
+        grad_clip = float(training_cfg.get("grad_clip_norm", 1.0 if real_data else 0.0))
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr, weight_decay=weight_decay)
 
     max_epochs = args.epochs
@@ -286,6 +310,7 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
             scheduler=scheduler,
             max_steps=args.max_steps,
             global_step=global_step,
+            grad_clip_norm=grad_clip,
         )
         val_loss, val_acc, _ = _run_epoch(
             model,
@@ -296,7 +321,10 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
             scheduler=None,
             max_steps=None,
             global_step=global_step,
+            grad_clip_norm=0.0,
         )
+        if epoch == 0 and not math.isfinite(train_loss):
+            raise RuntimeError(f"Non-finite train loss after epoch 0: {train_loss}")
         history.append(
             {
                 "epoch": epoch,
@@ -349,6 +377,7 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         "device": str(device),
         "batch_size": batch_size,
         "learning_rate": lr,
+        "grad_clip_norm": grad_clip if grad_clip > 0 else None,
         "num_classes": num_classes,
         "epochs_completed": len(history),
         "global_step": global_step,
