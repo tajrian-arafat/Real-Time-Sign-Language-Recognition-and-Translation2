@@ -12,8 +12,8 @@
   "health": {
     "status": "ok",
     "model_loaded": true,
-    "model_path": "/workspace/models/stub/stub_classifier.onnx",
-    "is_stub": true,
+    "model_path": "/workspace/models/served/model.onnx",
+    "is_stub": false,
     "model_error": null,
     "bangla_dictionary_loaded": true,
     "bangla_dictionary_error": null
@@ -26,33 +26,33 @@
   "websocket_ok": true,
   "sample_prediction": {
     "type": "prediction",
-    "word": "no",
-    "confidence": 0.1400991929538987,
+    "word": "another",
+    "confidence": 0.04854375259815882,
     "top_k": [
       {
-        "word": "no",
-        "confidence": 0.1400991929538987
+        "word": "another",
+        "confidence": 0.04854375259815882
       },
       {
-        "word": "help",
-        "confidence": 0.13478090286292804
+        "word": "arm",
+        "confidence": 0.048162835696919405
       },
       {
-        "word": "yes",
-        "confidence": 0.12918859273894495
+        "word": "not",
+        "confidence": 0.03215942018021952
       },
       {
-        "word": "water",
-        "confidence": 0.12809114195684543
+        "word": "jacket",
+        "confidence": 0.025398668993536707
       },
       {
-        "word": "thanks",
-        "confidence": 0.12285147100950235
+        "word": "open",
+        "confidence": 0.021438693000447043
       }
     ],
-    "model_version": "stub-deterministic-v1",
-    "vocab_size": 8,
-    "latency_ms": 10.320239999998648,
+    "model_version": "model",
+    "vocab_size": 250,
+    "latency_ms": 2.7837280031235423,
     "committed_word": null
   },
   "translate_word_ok": true,
@@ -67,7 +67,7 @@
     "english": "hello friend",
     "normalized_english": "hello friend",
     "bangla": "হ্যালো বন্ধু",
-    "latency_sec": 0.23993704100001878,
+    "latency_sec": 0.1072202869981993,
     "model_id": "csebuetnlp/banglat5_nmt_en_bn"
   },
   "env_example_mock_ws_false": true,

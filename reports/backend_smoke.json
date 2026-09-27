@@ -31,7 +31,7 @@
     ],
     "model_version": "model",
     "vocab_size": 250,
-    "latency_ms": 2.4743499998294283,
+    "latency_ms": 2.5341369982925244,
     "committed_word": null
   },
   "sample_instant_translate": {
@@ -40,6 +40,7 @@
     "source": "dictionary"
   },
   "model_version": "model",
-  "is_stub": true,
+  "is_stub": false,
+  "onnx_path": "/workspace/models/served/model.onnx",
   "bangla_dictionary_words": 250
 }

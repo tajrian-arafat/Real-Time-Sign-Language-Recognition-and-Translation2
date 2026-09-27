@@ -73,6 +73,7 @@ def test_websocket_prediction_round_trip(client: TestClient, tmp_path: Path) -> 
     dict_resp = client.post("/api/translate/word", json={"english": "hello"})
     instant_ok = dict_resp.status_code == 200 and dict_resp.json().get("bangla")
 
+    health = client.get("/health").json()
     report = {
         "health_ok": True,
         "websocket_ok": True,
@@ -81,7 +82,8 @@ def test_websocket_prediction_round_trip(client: TestClient, tmp_path: Path) -> 
         "sample_prediction": prediction,
         "sample_instant_translate": dict_resp.json() if instant_ok else None,
         "model_version": prediction.get("model_version"),
-        "is_stub": True,
+        "is_stub": bool(health.get("is_stub")),
+        "onnx_path": health.get("model_path"),
         "bangla_dictionary_words": len(load_bangla_dictionary()),
     }
     report_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
