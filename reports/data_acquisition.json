@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-09-27T00:07:21.982714+00:00",
+  "generated_at_utc": "2026-09-27T00:08:52.300999+00:00",
   "agent": "Agent 2 \u2014 Data Acquisition",
   "data_root_cloud": "/workspace/data",
   "data_root_windows_local_documentation": "D:\\PROJECTS\\sign language",
@@ -8,6 +8,7 @@
     "competition": "asl-signs",
     "target_dir": "/workspace/data/raw/kaggle_asl_signs",
     "credentials_present": true,
+    "credential_mode": "KAGGLE_API_TOKEN",
     "auth_modes": [
       "KAGGLE_USERNAME+KAGGLE_KEY",
       "KAGGLE_API_TOKEN",
@@ -23,7 +24,9 @@
     ],
     "status": "downloaded",
     "fallback_tier": null,
-    "competition_entry_detail": "user_has_entered=True"
+    "competition_entry_detail": "user_has_entered=True",
+    "user_has_entered_competition": true,
+    "competition_list_excerpt": "ref                                            deadline             category       reward  teamCount  userHasEntered  userRank  \n---------------------------------------------  -------------------  --------  -----------  ---------  --------------  --------  \nhttps://www.kaggle.com/competitions/asl-signs  2023-05-01 23:59:00  Research  100,000 Usd       1165            True         0"
   },
   "asl_citizen": {
     "source_page": "https://www.microsoft.com/en-us/research/project/asl-citizen/",
@@ -32,9 +35,9 @@
     "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
     "background_pid": 7357,
     "wget_log": "/workspace/data/raw/asl_citizen/wget_asl_citizen.log",
-    "status": "started_background",
-    "fallback_tier": "Tier 2 \u2014 Hugging Face Voxel51/WLASL (video mirror)",
-    "zip_bytes_so_far": 2057306112
+    "status": "in_progress",
+    "fallback_tier": null,
+    "zip_bytes_so_far": 16986532639
   },
   "integrity": {
     "kaggle_asl_signs": {
@@ -51,7 +54,7 @@
       "path": "/workspace/data/raw/asl_citizen",
       "status": "in_progress",
       "zip_path": "/workspace/data/raw/asl_citizen/ASL_Citizen.zip",
-      "zip_bytes": 2072021916,
+      "zip_bytes": 17067965940,
       "zip_complete": null,
       "extracted_video_count": 0,
       "expected_video_range": [

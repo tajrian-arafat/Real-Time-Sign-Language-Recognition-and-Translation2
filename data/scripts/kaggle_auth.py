@@ -1,4 +1,5 @@
-"""Detect Kaggle API credentials without exposing secrets."""
+#!/usr/bin/env python3
+"""Detect Kaggle credentials without exposing secrets."""
 from __future__ import annotations
 
 import os
@@ -16,7 +17,12 @@ def kaggle_credentials_present() -> bool:
     token_path = Path.home() / ".kaggle" / "access_token"
     if token_path.is_file() and token_path.read_text(encoding="utf-8").strip():
         return True
-    return False
+    legacy = Path.home() / ".kaggle" / "kaggle.json"
+    return legacy.is_file()
+
+
+def kaggle_credentials_configured() -> bool:
+    return kaggle_credentials_present()
 
 
 def kaggle_credentials_message() -> str:
@@ -24,6 +30,20 @@ def kaggle_credentials_message() -> str:
         "Set KAGGLE_USERNAME and KAGGLE_KEY, or export KAGGLE_API_TOKEN "
         "(see https://www.kaggle.com/settings — API token), then re-run."
     )
+
+
+def credential_mode() -> str:
+    if os.environ.get("KAGGLE_API_TOKEN", "").strip():
+        return "KAGGLE_API_TOKEN"
+    if os.environ.get("KAGGLE_USERNAME", "").strip() and os.environ.get(
+        "KAGGLE_KEY", ""
+    ).strip():
+        return "KAGGLE_USERNAME_KAGGLE_KEY"
+    if (Path.home() / ".kaggle" / "access_token").is_file():
+        return "kaggle_access_token_file"
+    if (Path.home() / ".kaggle" / "kaggle.json").is_file():
+        return "kaggle_json"
+    return "none"
 
 
 def kaggle_competition_entered(competition_slug: str = "asl-signs") -> tuple[bool | None, str]:
