@@ -18,10 +18,16 @@ DEFAULT_REPO = os.environ.get(
 
 def main() -> int:
     onnx = REPO / "models" / "served" / "model.onnx"
+    label_map = REPO / "models" / "served" / "label_map.json"
     extended = REPO / "models" / "kaggle_extended_v1" / "best.pt"
-    if onnx.is_file() and extended.is_file():
+    if onnx.is_file() and extended.is_file() and label_map.is_file():
         print("restore_served_artifacts: models already present", file=sys.stderr)
         return 0
+    if onnx.is_file() and extended.is_file() and not label_map.is_file():
+        _copy_label_map_from_bundle(REPO / "artifacts" / "hf_restore", label_map)
+        if label_map.is_file():
+            print("restore_served_artifacts: restored missing label_map.json", file=sys.stderr)
+            return 0
 
     hf_repo = DEFAULT_REPO
     dest = REPO / "artifacts" / "hf_restore"
@@ -47,12 +53,34 @@ def main() -> int:
     if src_pt.is_file():
         (REPO / "models" / "kaggle_extended_v1").mkdir(parents=True, exist_ok=True)
         shutil.copy2(src_pt, extended)
+    _copy_label_map_from_bundle(dest, label_map)
 
     report["served_onnx"] = onnx.is_file()
+    report["served_label_map"] = label_map.is_file()
     report["extended_best_pt"] = extended.is_file()
-    report["status"] = "ok" if report["served_onnx"] and report["extended_best_pt"] else "partial"
+    report["status"] = (
+        "ok"
+        if report["served_onnx"] and report["extended_best_pt"] and report["served_label_map"]
+        else "partial"
+    )
     _write(report)
     return 0 if report["status"] == "ok" else 1
+
+
+def _copy_label_map_from_bundle(bundle_dir: Path, label_dst: Path) -> None:
+    src = bundle_dir / "label_map.json"
+    if not src.is_file():
+        processed = (
+            Path(os.environ.get("SIGN_LANGUAGE_DATA_ROOT", REPO / "data"))
+            / "processed"
+            / "kaggle_asl_signs"
+            / "label_map.json"
+        )
+        if processed.is_file():
+            src = processed
+    if src.is_file() and not label_dst.is_file():
+        label_dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, label_dst)
 
 
 def _download_hf_dataset(hf_repo: str, dest: Path) -> tuple[int, str]:
