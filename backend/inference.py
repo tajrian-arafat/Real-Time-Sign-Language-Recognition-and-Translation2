@@ -20,6 +20,7 @@ from backend.config_loader import (
     resolve_onnx_model_path,
 )
 from ml.sequence_padding import fit_sequence_length
+from ml.preprocess.live_window import preprocess_landmark_frames
 
 
 @dataclass(frozen=True)
@@ -183,19 +184,8 @@ class OnnxSignClassifier:
     def _frames_to_tensor(self, frames: list[list[float]]) -> np.ndarray:
         if not frames:
             raise ValueError("landmark window must include at least one frame")
-        rows: list[np.ndarray] = []
-        for frame in frames:
-            arr = np.asarray(frame, dtype=np.float32)
-            if arr.size < self._feature_dim:
-                padded = np.zeros(self._feature_dim, dtype=np.float32)
-                padded[: arr.size] = arr.reshape(-1)
-                arr = padded
-            elif arr.size > self._feature_dim:
-                arr = arr.reshape(-1)[: self._feature_dim]
-            rows.append(arr.astype(np.float32))
-        seq = np.stack(rows, axis=0)  # (T_in, F)
-        # Reshape to (T, 1, F) for sequence padding helpers expecting (T, L, D)
-        seq3 = seq[:, np.newaxis, :]
+        packed = preprocess_landmark_frames(frames)  # (T_in, 392)
+        seq3 = packed[:, np.newaxis, :]
         fitted, _mask = fit_sequence_length(seq3, self._sequence_T)
         flat = fitted.reshape(self._sequence_T, self._feature_dim)
         return flat[np.newaxis, ...].astype(np.float32)

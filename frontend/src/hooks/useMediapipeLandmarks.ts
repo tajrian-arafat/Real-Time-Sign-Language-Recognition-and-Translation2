@@ -194,6 +194,8 @@ export function useMediapipeLandmarks(
             handResult.landmarks?.map((lm) =>
               lm.map((p) => ({ x: p.x, y: p.y, z: p.z })),
             ) ?? [];
+          const handLabels =
+            handResult.handedness?.map((h) => h[0]?.categoryName) ?? [];
           const posePts = poseResult.landmarks?.[0]?.map((p) => ({
             x: p.x,
             y: p.y,
@@ -230,6 +232,7 @@ export function useMediapipeLandmarks(
           if (onFrame) {
             const landmarks = flattenLandmarkFrame({
               hands: handPts,
+              handLabels,
               pose: posePts,
               face: facePts,
             });
