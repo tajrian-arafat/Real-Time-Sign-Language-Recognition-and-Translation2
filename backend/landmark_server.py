@@ -10,12 +10,8 @@ from typing import Iterator
 import numpy as np
 
 from backend.config_loader import get_config, get_landmark_settings
-<<<<<<< HEAD
 from ml.preprocess.live_window import preprocess_landmark_frames
 from ml.preprocess.tasks_holistic import detections_to_holistic_frame
-=======
-from backend.landmark_pack import pack_holistic_sequence, tasks_frame_to_holistic
->>>>>>> 194fd23 (fix: align video upload landmarks with training pack)
 
 
 @dataclass(frozen=True)
@@ -32,42 +28,6 @@ class VideoLandmarkExtractor:
         self._feature_dim = get_landmark_settings(self._config)["input_dim_per_frame"]
         self._target_fps = target_fps
 
-<<<<<<< HEAD
-    def _flatten_detection(
-        self,
-        hand_landmarks: list | None,
-        pose_landmarks: list | None,
-        face_landmarks: list | None,
-        *,
-        handednesses: list | None = None,
-    ) -> list[float]:
-        holistic = detections_to_holistic_frame(
-            hand_landmarks,
-            handednesses=handednesses,
-            pose_landmarks=pose_landmarks,
-            face_landmarks=face_landmarks,
-        )
-        return holistic.reshape(-1).astype(float).tolist()
-
-    def _packed_detection(
-        self,
-        hand_landmarks: list | None,
-        pose_landmarks: list | None,
-        face_landmarks: list | None,
-        *,
-        handednesses: list | None = None,
-    ) -> list[float]:
-        flat = self._flatten_detection(
-            hand_landmarks,
-            pose_landmarks,
-            face_landmarks,
-            handednesses=handednesses,
-        )
-        packed = preprocess_landmark_frames([flat])[0]
-        return packed.astype(float).tolist()
-
-=======
->>>>>>> 194fd23 (fix: align video upload landmarks with training pack)
     def extract_from_path(self, video_path: Path) -> list[ExtractedFrame]:
         import cv2
         import mediapipe as mp
@@ -96,8 +56,7 @@ class VideoLandmarkExtractor:
             running_mode=vision.RunningMode.VIDEO,
         )
 
-        holistic_rows: list[np.ndarray] = []
-        timestamps: list[int] = []
+        frames: list[ExtractedFrame] = []
 
         capture = cv2.VideoCapture(str(video_path))
         if not capture.isOpened():
@@ -133,39 +92,24 @@ class VideoLandmarkExtractor:
                 face_pts = (
                     face_result.face_landmarks[0] if face_result.face_landmarks else None
                 )
-<<<<<<< HEAD
                 handedness = hand_result.handedness if hand_result.handedness else None
-                flat = self._flatten_detection(
-                    hand_pts, pose_pts, face_pts, handednesses=handedness
-                )
-                frames.append(ExtractedFrame(timestamp_ms=timestamp_ms, landmarks=flat))
-=======
-                holistic = tasks_frame_to_holistic(
-                    pose_pts,
-                    face_pts,
+                holistic = detections_to_holistic_frame(
                     hand_result.hand_landmarks,
-                    hand_result.handedness,
+                    handednesses=handedness,
+                    pose_landmarks=pose_pts,
+                    face_landmarks=face_pts,
                 )
-                holistic_rows.append(holistic)
-                timestamps.append(timestamp_ms)
->>>>>>> 194fd23 (fix: align video upload landmarks with training pack)
+                flat = holistic.reshape(-1).astype(float).tolist()
+                packed = preprocess_landmark_frames([flat])[0]
+                vec = packed.astype(np.float32).reshape(-1).tolist()
+                if len(vec) != self._feature_dim:
+                    raise ValueError(
+                        f"Packed feature dim {len(vec)} != expected {self._feature_dim}"
+                    )
+                frames.append(ExtractedFrame(timestamp_ms=timestamp_ms, landmarks=vec))
                 index += 1
 
         capture.release()
-
-        if not holistic_rows:
-            return []
-
-        stacked = np.stack(holistic_rows, axis=0)
-        packed = pack_holistic_sequence(stacked)
-        frames: list[ExtractedFrame] = []
-        for ts, row in zip(timestamps, packed, strict=True):
-            vec = row.astype(np.float32).reshape(-1).tolist()
-            if len(vec) != self._feature_dim:
-                raise ValueError(
-                    f"Packed feature dim {len(vec)} != expected {self._feature_dim}"
-                )
-            frames.append(ExtractedFrame(timestamp_ms=ts, landmarks=vec))
         return frames
 
     def extract_from_bytes(self, data: bytes, suffix: str = ".mp4") -> list[ExtractedFrame]:

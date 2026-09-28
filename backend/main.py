@@ -219,21 +219,24 @@ async def recognize_video(file: UploadFile = File(...)) -> VideoRecognitionRespo
     window_size = min(32, max(8, len(frames)))
     stride = max(1, window_size // 2)
     min_segment_confidence = 0.05
+    best_fallback: VideoRecognitionSegment | None = None
 
     for chunk in sliding_windows(frames, window_size=window_size, stride=stride):
         vectors = [f.landmarks for f in chunk]
         result = classifier.predict_window(vectors)
+        candidate = VideoRecognitionSegment(
+            timestamp_ms=chunk[-1].timestamp_ms,
+            word=result.word,
+            confidence=result.confidence,
+            top_k=[TopKCandidate(word=w, confidence=c) for w, c in result.top_k],
+        )
+        if (
+            best_fallback is None
+            or candidate.confidence > best_fallback.confidence
+        ):
+            best_fallback = candidate
         if result.confidence >= min_segment_confidence:
-            segments.append(
-                VideoRecognitionSegment(
-                    timestamp_ms=chunk[-1].timestamp_ms,
-                    word=result.word,
-                    confidence=result.confidence,
-                    top_k=[
-                        TopKCandidate(word=w, confidence=c) for w, c in result.top_k
-                    ],
-                )
-            )
+            segments.append(candidate)
         sentence_state.process_prediction(
             PredictionSample(
                 word=result.word,
@@ -241,6 +244,9 @@ async def recognize_video(file: UploadFile = File(...)) -> VideoRecognitionRespo
                 timestamp_ms=chunk[-1].timestamp_ms,
             )
         )
+
+    if not segments and best_fallback is not None and best_fallback.confidence > 0.0:
+        segments.append(best_fallback)
 
     latency_ms = (time.perf_counter() - started) * 1000.0
     committed_words = [seg.word for seg in segments]
