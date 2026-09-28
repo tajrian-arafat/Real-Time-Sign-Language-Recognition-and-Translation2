@@ -12,7 +12,7 @@ import {
   useBackendHealth,
 } from "./hooks/useBackendHealth";
 import { useFps } from "./hooks/useFps";
-import { useLandmarkWindowBuffer } from "./hooks/useLandmarkWindowBuffer";
+import { useLandmarkWindowBuffer, LANDMARK_WINDOW_SIZE } from "./hooks/useLandmarkWindowBuffer";
 import { useMediapipeLandmarks } from "./hooks/useMediapipeLandmarks";
 import { useRecognitionWebSocket } from "./hooks/useRecognitionWebSocket";
 import { useSentenceBuffer } from "./hooks/useSentenceBuffer";
@@ -20,7 +20,8 @@ import { useTranslationApi } from "./hooks/useTranslationApi";
 import { useWebcam } from "./hooks/useWebcam";
 import type { LandmarkFrame } from "./types/ws";
 
-const MIN_FRAMES_BEFORE_SEND = 8;
+/** Wait for enough motion context before padding/resampling to T=64 on the server. */
+const MIN_FRAMES_BEFORE_SEND = Math.max(32, Math.floor(LANDMARK_WINDOW_SIZE / 2));
 const LANDMARK_SEND_INTERVAL_MS = 250;
 
 export default function App() {

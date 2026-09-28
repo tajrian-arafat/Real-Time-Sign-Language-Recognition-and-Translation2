@@ -23,7 +23,9 @@ def _sha256(path: Path) -> str:
 
 
 def main() -> int:
-    checkpoint = REPO / "models" / "kaggle_overnight_v1" / "best.pt"
+    checkpoint = REPO / "models" / "kaggle_extended_v2" / "best.pt"
+    if not checkpoint.is_file():
+        checkpoint = REPO / "models" / "kaggle_overnight_v1" / "best.pt"
     if not checkpoint.is_file():
         checkpoint = REPO / "models" / "kaggle_extended_v1" / "best.pt"
     onnx_src = REPO / "models" / "served" / "model.onnx"
@@ -78,6 +80,17 @@ def main() -> int:
             manifest["files"].append(
                 {"path": rel, "size_bytes": p.stat().st_size, "sha256": _sha256(p)}
             )
+    metrics_path = REPO / "reports" / "metrics.json"
+    if metrics_path.is_file():
+        shutil.copy2(metrics_path, BUNDLE / "metrics.json")
+        manifest["files"].append(
+            {
+                "path": "metrics.json",
+                "size_bytes": (BUNDLE / "metrics.json").stat().st_size,
+                "sha256": _sha256(BUNDLE / "metrics.json"),
+            }
+        )
+
     (BUNDLE / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(manifest, indent=2))
     return 0
