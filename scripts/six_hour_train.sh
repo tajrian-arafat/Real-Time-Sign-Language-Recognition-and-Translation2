@@ -23,15 +23,16 @@ NUM_WORKERS="${TRAIN_NUM_WORKERS:-0}"
 
 echo "device=cpu batch=32 lr=$LR epochs=$EPOCHS wall=${WALL}s workers=$NUM_WORKERS run=$RUN_NAME resume=$RESUME" | tee -a "$LOG"
 
-"$PY" -m ml.train \
-  --run-name "$RUN_NAME" \
-  --resume "$RESUME" \
-  --epochs "$EPOCHS" \
-  --learning-rate "$LR" \
-  --num-workers "$NUM_WORKERS" \
-  --export-on-best \
-  --max-wall-seconds "$WALL" \
-  2>&1 | tee -a "$LOG"
+TRAIN_ARGS=(
+  --run-name "$RUN_NAME"
+  --resume "$RESUME"
+  --epochs "$EPOCHS"
+  --learning-rate "$LR"
+  --num-workers "$NUM_WORKERS"
+  --export-on-best
+  --max-wall-seconds "$WALL"
+)
+"$PY" -m ml.train "${TRAIN_ARGS[@]}" 2>&1 | tee -a "$LOG"
 
 CKPT="models/${RUN_NAME}/best.pt"
 if [[ -f "$CKPT" ]]; then

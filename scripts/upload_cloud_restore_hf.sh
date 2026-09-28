@@ -14,11 +14,14 @@ if [[ ! -d "$BUNDLE" ]] || [[ ! -f "$BUNDLE/model.onnx" ]]; then
   exit 1
 fi
 
-if command -v hf >/dev/null 2>&1; then
-  hf auth login --token "$HF_TOKEN"
-  hf upload "$REPO" "$BUNDLE" . --repo-type dataset
-else
-  huggingface-cli login --token "$HF_TOKEN"
-  huggingface-cli upload "$REPO" "$BUNDLE" . --repo-type dataset
+HF_BIN="${ROOT}/.venv/bin/hf"
+if [[ ! -x "$HF_BIN" ]]; then
+  HF_BIN="$(command -v hf || true)"
 fi
+if [[ -z "$HF_BIN" ]] || [[ ! -x "$HF_BIN" ]]; then
+  echo "Missing Hugging Face CLI (expected ${ROOT}/.venv/bin/hf)" >&2
+  exit 1
+fi
+"$HF_BIN" auth login --token "$HF_TOKEN"
+"$HF_BIN" upload "$REPO" "$BUNDLE" . --repo-type dataset
 echo "Uploaded to https://huggingface.co/datasets/${REPO}"
