@@ -14,12 +14,15 @@ from backend.inference import reset_classifier_for_tests
 from backend.main import app
 
 
-def _synthetic_window(seed: float = 0.42, num_frames: int = 16) -> dict:
+def _synthetic_window(seed: float = 0.42, num_frames: int = 32) -> dict:
     rng = np.random.default_rng(int(seed * 1000))
+    holistic = rng.normal(size=(num_frames, 543, 3)).astype(np.float32) * 0.05
+    holistic[:, 11, :] = np.array([-0.2, 0.0, 0.0], dtype=np.float32)
+    holistic[:, 12, :] = np.array([0.2, 0.0, 0.0], dtype=np.float32)
     frames = []
     for i in range(num_frames):
-        vec = rng.random(392, dtype=np.float32).tolist()
-        frames.append({"timestamp_ms": i * 66, "landmarks": vec})
+        flat = holistic[i].reshape(-1).tolist()
+        frames.append({"timestamp_ms": i * 66, "landmarks": flat})
     return {"type": "landmark_window", "frames": frames}
 
 
