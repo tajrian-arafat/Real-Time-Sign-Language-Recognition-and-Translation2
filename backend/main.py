@@ -218,18 +218,12 @@ async def recognize_video(file: UploadFile = File(...)) -> VideoRecognitionRespo
     segments: list[VideoRecognitionSegment] = []
     window_size = min(32, max(8, len(frames)))
     stride = max(1, window_size // 2)
+    min_segment_confidence = 0.05
 
     for chunk in sliding_windows(frames, window_size=window_size, stride=stride):
         vectors = [f.landmarks for f in chunk]
         result = classifier.predict_window(vectors)
-        committed = sentence_state.process_prediction(
-            PredictionSample(
-                word=result.word,
-                confidence=result.confidence,
-                timestamp_ms=chunk[-1].timestamp_ms,
-            )
-        )
-        if committed is not None:
+        if result.confidence >= min_segment_confidence:
             segments.append(
                 VideoRecognitionSegment(
                     timestamp_ms=chunk[-1].timestamp_ms,
@@ -240,6 +234,13 @@ async def recognize_video(file: UploadFile = File(...)) -> VideoRecognitionRespo
                     ],
                 )
             )
+        sentence_state.process_prediction(
+            PredictionSample(
+                word=result.word,
+                confidence=result.confidence,
+                timestamp_ms=chunk[-1].timestamp_ms,
+            )
+        )
 
     latency_ms = (time.perf_counter() - started) * 1000.0
     committed_words = [seg.word for seg in segments]
