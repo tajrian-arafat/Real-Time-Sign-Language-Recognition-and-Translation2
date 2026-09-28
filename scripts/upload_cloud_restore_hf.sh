@@ -14,6 +14,11 @@ if [[ ! -d "$BUNDLE" ]] || [[ ! -f "$BUNDLE/model.onnx" ]]; then
   exit 1
 fi
 
-huggingface-cli login --token "$HF_TOKEN"
-huggingface-cli upload "$REPO" "$BUNDLE" . --repo-type dataset
+if command -v hf >/dev/null 2>&1; then
+  hf auth login --token "$HF_TOKEN"
+  hf upload "$REPO" "$BUNDLE" . --repo-type dataset
+else
+  huggingface-cli login --token "$HF_TOKEN"
+  huggingface-cli upload "$REPO" "$BUNDLE" . --repo-type dataset
+fi
 echo "Uploaded to https://huggingface.co/datasets/${REPO}"

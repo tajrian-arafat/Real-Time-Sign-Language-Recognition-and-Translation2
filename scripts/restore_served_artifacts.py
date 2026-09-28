@@ -28,15 +28,29 @@ def main() -> int:
     dest.mkdir(parents=True, exist_ok=True)
 
     cmd = [
-        "huggingface-cli",
+        "hf",
         "download",
         hf_repo,
+        "--repo-type",
+        "dataset",
         "--local-dir",
         str(dest),
-        "--local-dir-use-symlinks",
-        "False",
     ]
-    proc = subprocess.run(cmd, cwd=REPO, check=False)
+    proc = subprocess.run(cmd, cwd=REPO, check=False, env=os.environ)
+    if proc.returncode != 0:
+        # Legacy hub CLI (deprecated but still on some images)
+        legacy = [
+            "huggingface-cli",
+            "download",
+            hf_repo,
+            "--repo-type",
+            "dataset",
+            "--local-dir",
+            str(dest),
+            "--local-dir-use-symlinks",
+            "False",
+        ]
+        proc = subprocess.run(legacy, cwd=REPO, check=False, env=os.environ)
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "hf_repo": hf_repo,
