@@ -30,9 +30,9 @@ def main() -> int:
     from ml.preprocess.paths import load_config, processed_dir
 
     config = load_config()
-    processed = processed_dir(config)
-    label_src = processed / config["paths"]["label_map_filename"]
-    splits_src = processed / "splits"
+    kaggle_root = processed_dir(config) / "kaggle_asl_signs"
+    label_src = kaggle_root / config["paths"]["label_map_filename"]
+    splits_src = kaggle_root / "splits"
     if not checkpoint.is_file():
         raise SystemExit(f"Missing checkpoint: {checkpoint}")
     if not onnx_src.is_file():
