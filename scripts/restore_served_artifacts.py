@@ -27,39 +27,17 @@ def main() -> int:
     dest = REPO / "artifacts" / "hf_restore"
     dest.mkdir(parents=True, exist_ok=True)
 
-    cmd = [
-        "hf",
-        "download",
-        hf_repo,
-        "--repo-type",
-        "dataset",
-        "--local-dir",
-        str(dest),
-    ]
-    proc = subprocess.run(cmd, cwd=REPO, check=False, env=os.environ)
-    if proc.returncode != 0:
-        # Legacy hub CLI (deprecated but still on some images)
-        legacy = [
-            "huggingface-cli",
-            "download",
-            hf_repo,
-            "--repo-type",
-            "dataset",
-            "--local-dir",
-            str(dest),
-            "--local-dir-use-symlinks",
-            "False",
-        ]
-        proc = subprocess.run(legacy, cwd=REPO, check=False, env=os.environ)
+    exit_code, method = _download_hf_dataset(hf_repo, dest)
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "hf_repo": hf_repo,
-        "download_exit_code": proc.returncode,
+        "download_exit_code": exit_code,
+        "download_method": method,
     }
-    if proc.returncode != 0:
+    if exit_code != 0:
         report["status"] = "download_failed"
         _write(report)
-        return proc.returncode
+        return exit_code
 
     src_onnx = dest / "model.onnx"
     src_pt = dest / "best.pt"
@@ -75,6 +53,47 @@ def main() -> int:
     report["status"] = "ok" if report["served_onnx"] and report["extended_best_pt"] else "partial"
     _write(report)
     return 0 if report["status"] == "ok" else 1
+
+
+def _download_hf_dataset(hf_repo: str, dest: Path) -> tuple[int, str]:
+    """Prefer huggingface_hub API (no deprecated huggingface-cli)."""
+    try:
+        from huggingface_hub import snapshot_download
+
+        snapshot_download(
+            repo_id=hf_repo,
+            repo_type="dataset",
+            local_dir=str(dest),
+        )
+        return 0, "snapshot_download"
+    except Exception as exc:
+        print(f"restore_served_artifacts: snapshot_download failed: {exc}", file=sys.stderr)
+
+    cmd = [
+        "hf",
+        "download",
+        hf_repo,
+        "--repo-type",
+        "dataset",
+        "--local-dir",
+        str(dest),
+    ]
+    proc = subprocess.run(cmd, cwd=REPO, check=False, env=os.environ)
+    if proc.returncode == 0:
+        return 0, "hf_cli"
+    legacy = [
+        "huggingface-cli",
+        "download",
+        hf_repo,
+        "--repo-type",
+        "dataset",
+        "--local-dir",
+        str(dest),
+        "--local-dir-use-symlinks",
+        "False",
+    ]
+    proc = subprocess.run(legacy, cwd=REPO, check=False, env=os.environ)
+    return proc.returncode, "huggingface-cli" if proc.returncode == 0 else "failed"
 
 
 def _write(report: dict) -> None:
