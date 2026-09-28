@@ -28,39 +28,6 @@ class VideoLandmarkExtractor:
         self._feature_dim = get_landmark_settings(self._config)["input_dim_per_frame"]
         self._target_fps = target_fps
 
-    def _flatten_detection(
-        self,
-        hand_landmarks: list | None,
-        pose_landmarks: list | None,
-        face_landmarks: list | None,
-        *,
-        handednesses: list | None = None,
-    ) -> list[float]:
-        holistic = detections_to_holistic_frame(
-            hand_landmarks,
-            handednesses=handednesses,
-            pose_landmarks=pose_landmarks,
-            face_landmarks=face_landmarks,
-        )
-        return holistic.reshape(-1).astype(float).tolist()
-
-    def _packed_detection(
-        self,
-        hand_landmarks: list | None,
-        pose_landmarks: list | None,
-        face_landmarks: list | None,
-        *,
-        handednesses: list | None = None,
-    ) -> list[float]:
-        flat = self._flatten_detection(
-            hand_landmarks,
-            pose_landmarks,
-            face_landmarks,
-            handednesses=handednesses,
-        )
-        packed = preprocess_landmark_frames([flat])[0]
-        return packed.astype(float).tolist()
-
     def extract_from_path(self, video_path: Path) -> list[ExtractedFrame]:
         import cv2
         import mediapipe as mp
@@ -90,6 +57,7 @@ class VideoLandmarkExtractor:
         )
 
         frames: list[ExtractedFrame] = []
+
         capture = cv2.VideoCapture(str(video_path))
         if not capture.isOpened():
             raise ValueError(f"Unable to open video: {video_path}")
@@ -118,16 +86,27 @@ class VideoLandmarkExtractor:
                 pose_result = pose_lm.detect_for_video(mp_image, timestamp_ms)
                 face_result = face_lm.detect_for_video(mp_image, timestamp_ms)
 
-                hand_pts = hand_result.hand_landmarks
-                pose_pts = pose_result.pose_landmarks[0] if pose_result.pose_landmarks else None
+                pose_pts = (
+                    pose_result.pose_landmarks[0] if pose_result.pose_landmarks else None
+                )
                 face_pts = (
                     face_result.face_landmarks[0] if face_result.face_landmarks else None
                 )
                 handedness = hand_result.handedness if hand_result.handedness else None
-                flat = self._flatten_detection(
-                    hand_pts, pose_pts, face_pts, handednesses=handedness
+                holistic = detections_to_holistic_frame(
+                    hand_result.hand_landmarks,
+                    handednesses=handedness,
+                    pose_landmarks=pose_pts,
+                    face_landmarks=face_pts,
                 )
-                frames.append(ExtractedFrame(timestamp_ms=timestamp_ms, landmarks=flat))
+                flat = holistic.reshape(-1).astype(float).tolist()
+                packed = preprocess_landmark_frames([flat])[0]
+                vec = packed.astype(np.float32).reshape(-1).tolist()
+                if len(vec) != self._feature_dim:
+                    raise ValueError(
+                        f"Packed feature dim {len(vec)} != expected {self._feature_dim}"
+                    )
+                frames.append(ExtractedFrame(timestamp_ms=timestamp_ms, landmarks=vec))
                 index += 1
 
         capture.release()
