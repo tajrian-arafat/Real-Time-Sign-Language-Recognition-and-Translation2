@@ -6,6 +6,7 @@ import argparse
 import json
 import math
 import os
+import shutil
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -226,6 +227,17 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         default=None,
         help="DataLoader workers (default: max(1, cpu_count-1) on CPU; config training.num_workers on CUDA)",
     )
+    parser.add_argument(
+        "--export-on-best",
+        action="store_true",
+        help="After each new best val checkpoint, run evaluate (val) and export ONNX to served/",
+    )
+    parser.add_argument(
+        "--max-wall-seconds",
+        type=float,
+        default=None,
+        help="Stop training after this many wall-clock seconds (e.g. six-hour budget)",
+    )
     args = parser.parse_args(argv)
 
     config = load_config()
@@ -315,9 +327,27 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         best_val_acc = float(meta.get("best_val_acc", -1.0))
 
     started = time.perf_counter()
+    wall_deadline: float | None = None
+    if args.max_wall_seconds is not None and args.max_wall_seconds > 0:
+        wall_deadline = started + float(args.max_wall_seconds)
     history: list[dict[str, Any]] = []
 
+    def _maybe_export_on_best() -> None:
+        if not args.export_on_best or not best_path.is_file():
+            return
+        served_onnx = repo_root() / config["paths"]["models_dir"] / config["inference"]["served_onnx"]
+        if served_onnx.is_file():
+            backup = served_onnx.with_suffix(".onnx.bak")
+            shutil.copy2(served_onnx, backup)
+        from ml.evaluate import evaluate_main
+        from ml.export_onnx import export_main
+
+        evaluate_main(["--checkpoint", str(best_path), "--split", "val"])
+        export_main(["--checkpoint", str(best_path)])
+
     for epoch in range(start_epoch, max_epochs):
+        if wall_deadline is not None and time.perf_counter() >= wall_deadline:
+            break
         train_loss, train_acc, global_step = _run_epoch(
             model,
             train_loader,
@@ -377,9 +407,12 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
                 num_classes=num_classes,
                 run_mode=run_mode,
             )
+            _maybe_export_on_best()
         else:
             stale_epochs += 1
 
+        if wall_deadline is not None and time.perf_counter() >= wall_deadline:
+            break
         if args.max_steps is not None and global_step >= args.max_steps:
             break
         if real_data and stale_epochs >= patience:
