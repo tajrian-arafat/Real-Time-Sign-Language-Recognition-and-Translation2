@@ -91,9 +91,9 @@ def _copy_label_map_from_bundle(bundle_dir: Path, label_dst: Path) -> None:
 def _processed_label_map_path() -> Path | None:
     """Fallback when HF bundle lacks label_map but preprocess data exists on disk."""
     try:
-        from backend.config_loader import load_config, resolve_data_root
+        from backend.config_loader import get_config, resolve_data_root
 
-        cfg = load_config()
+        cfg = get_config()
         root = resolve_data_root(cfg)
         candidate = (
             root
