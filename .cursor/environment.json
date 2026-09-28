@@ -1,6 +1,6 @@
 {
   "name": "ASL-Bangla integration",
-  "snapshot": "snapshot-20260927-8ed65d3a-d8aa-4ed5-9732-fcd9eb7f9057",
+  "snapshot": "snapshot-20260928-ab22b2ed-1d68-4d88-ba3a-d1feaece6e2e",
   "install": "bash scripts/setup_env.sh",
   "terminals": []
 }
