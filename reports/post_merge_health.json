@@ -1,0 +1,9 @@
+{
+    "status": "ok",
+    "model_loaded": true,
+    "model_path": "/workspace/models/served/model.onnx",
+    "is_stub": false,
+    "model_error": null,
+    "bangla_dictionary_loaded": true,
+    "bangla_dictionary_error": null
+}
