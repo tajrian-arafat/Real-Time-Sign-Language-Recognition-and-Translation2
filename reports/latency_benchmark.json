@@ -1,26 +1,26 @@
 {
-  "generated_at_utc": "2026-09-27T04:49:58.569775+00:00",
+  "generated_at_utc": "2026-09-28T12:17:28.359081+00:00",
   "method": "fastapi_testclient_websocket",
   "endpoint": "/ws/recognize",
   "num_samples": 100,
   "health": {
-    "is_stub": true,
-    "model_path": "/workspace/models/stub/stub_classifier.onnx",
+    "is_stub": false,
+    "model_path": "/workspace/models/served/model.onnx",
     "model_loaded": true
   },
   "round_trip_ms": {
-    "min": 3.5116,
-    "max": 8.766,
-    "mean": 3.7099,
-    "p50": 3.6131,
-    "p95": 3.8142
+    "min": 5.0965,
+    "max": 20.6773,
+    "mean": 8.4641,
+    "p50": 6.3318,
+    "p95": 16.6243
   },
   "server_reported_latency_ms": {
-    "min": 0.271,
-    "max": 4.7631,
-    "mean": 0.3377,
-    "p50": 0.2819,
-    "p95": 0.3605
+    "min": 1.6667,
+    "max": 14.2986,
+    "mean": 3.3631,
+    "p50": 2.4386,
+    "p95": 8.7589
   },
   "notes": "round_trip_ms includes TestClient JSON serialize/deserialize; server_reported_latency_ms is classifier.predict_window only."
 }

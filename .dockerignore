@@ -1,0 +1,12 @@
+.venv
+node_modules
+frontend/node_modules
+.git
+data/raw
+data/processed
+artifacts
+*.pt
+__pycache__
+.pytest_cache
+reports/*.json
+!reports/.gitkeep

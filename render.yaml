@@ -1,0 +1,42 @@
+# Render.com blueprint — free-tier friendly (CPU, no GPU).
+# Set secrets in the Render dashboard; never commit tokens.
+services:
+  - type: web
+    name: asl-bangla-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: SIGN_LANGUAGE_DATA_ROOT
+        value: /data
+      - key: HF_TOKEN
+        sync: false
+      - key: SIGN_LANGUAGE_RESTORE_HF_REPO
+        value: Taalvi/sign-language-cloud-restore
+      - key: PORT
+        value: "8000"
+    disk:
+      name: asl-data
+      mountPath: /data
+      sizeGB: 10
+
+  - type: web
+    name: asl-bangla-ui
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: asl-bangla-api
+          property: host
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://asl-bangla-api.onrender.com/api/*
+      - type: rewrite
+        source: /ws/*
+        destination: wss://asl-bangla-api.onrender.com/ws/*
