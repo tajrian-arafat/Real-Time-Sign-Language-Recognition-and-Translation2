@@ -25,9 +25,17 @@ def _sha256(path: Path) -> str:
 def main() -> int:
     checkpoint = REPO / "models" / "kaggle_extended_v2" / "best.pt"
     if not checkpoint.is_file():
-        checkpoint = REPO / "models" / "kaggle_overnight_v1" / "best.pt"
-    if not checkpoint.is_file():
-        checkpoint = REPO / "models" / "kaggle_extended_v1" / "best.pt"
+        checkpoint = None
+    for rel in (
+        "kaggle_extended_v3/best.pt",
+        "kaggle_extended_v2/best.pt",
+        "kaggle_extended_v1/best.pt",
+        "kaggle_overnight_v1/best.pt",
+    ):
+        candidate = REPO / "models" / rel
+        if candidate.is_file():
+            checkpoint = candidate
+            break
     onnx_src = REPO / "models" / "served" / "model.onnx"
     from ml.preprocess.paths import load_config, processed_dir
 
@@ -35,8 +43,8 @@ def main() -> int:
     kaggle_root = processed_dir(config) / "kaggle_asl_signs"
     label_src = kaggle_root / config["paths"]["label_map_filename"]
     splits_src = kaggle_root / "splits"
-    if not checkpoint.is_file():
-        raise SystemExit(f"Missing checkpoint: {checkpoint}")
+    if checkpoint is None or not checkpoint.is_file():
+        raise SystemExit("Missing checkpoint: no kaggle_extended_v3/v2/v1 or overnight best.pt")
     if not onnx_src.is_file():
         raise SystemExit(f"Missing ONNX: {onnx_src}")
     if not label_src.is_file():
