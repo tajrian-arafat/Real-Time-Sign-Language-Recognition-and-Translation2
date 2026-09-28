@@ -55,15 +55,30 @@ Production inference loads ONNX from:
 
 (relative to repo root; absolute path on the integration VM when artifacts are present: `/workspace/models/served/model.onnx`). Label map: `models/served/label_map.json`. When this file is missing, the backend falls back to `models/stub/stub_classifier.onnx` and `/health` reports `is_stub: true` — see [docs/integration-environment.md](docs/integration-environment.md).
 
-**Validation split (Kaggle `asl-signs`, 250 classes, 9,211 samples)** — checkpoint `models/kaggle_baseline/best.pt`, artifact `reports/metrics.json`:
+**Validation split (Kaggle `asl-signs`, 250 classes, 9,211 samples)** — artifact `reports/metrics.json`:
 
-| Metric | Value |
-| ------ | ----- |
-| Top-1 accuracy | **55.48%** (0.554771) |
-| Top-5 accuracy | **82.10%** (0.820975) |
-| Macro F1 | 0.537 |
+| Checkpoint | Top-1 | Top-5 | Macro F1 |
+| ---------- | ----- | ----- | -------- |
+| `models/kaggle_baseline/best.pt` (baseline) | 55.48% | 82.10% | 0.537 |
+| `models/kaggle_extended_v1/best.pt` (served / HF restore) | **64.05%** | see metrics file | see metrics file |
 
-Reproduce evaluation after training: `python -m ml.evaluate` (with processed data and checkpoint on disk). Do not expect these numbers from the stub ONNX.
+Reproduce: `python -m ml.evaluate --checkpoint models/kaggle_extended_v1/best.pt --split val`. Do not expect these numbers from the stub ONNX.
+
+## Wipe-proof model restore
+
+On empty cloud VMs, after data is present:
+
+```bash
+python scripts/restore_served_artifacts.py   # needs HF_TOKEN for hub download
+```
+
+Bundle: Hugging Face dataset `Taalvi/sign-language-cloud-restore` (ONNX + `best.pt` + `label_map.json`). See `scripts/build_cloud_restore.py` to rebuild the bundle.
+
+## Deployment
+
+Docker Compose, Render blueprint, and env vars: **[docs/deployment.md](docs/deployment.md)**. Status summary: **[docs/deployment-ready-status.md](docs/deployment-ready-status.md)**.
+
+Full pipeline (with SKIP flags when data/models exist): `bash scripts/run_full_pipeline.sh`.
 
 ## Inference latency benchmark
 

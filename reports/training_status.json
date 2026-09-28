@@ -1,10 +1,11 @@
 {
-  "generated_at_utc": "2026-09-27T04:41:23.077898+00:00",
+  "generated_at_utc": "2026-09-28T12:17:16.468727+00:00",
   "agent": "Agent 4 \u2014 Model Training & Evaluation",
   "run_mode": "synthetic_smoke",
   "real_data_available": false,
   "device": "cpu",
   "batch_size": 32,
+  "num_workers": 3,
   "learning_rate": 7.5e-05,
   "grad_clip_norm": 1.0,
   "num_classes": 16,
@@ -13,13 +14,13 @@
   "best_val_top1_acc": 0.03125,
   "checkpoint_best": "/workspace/models/smoke/best.pt",
   "checkpoint_last": "/workspace/models/smoke/last.pt",
-  "elapsed_seconds": 0.744,
+  "elapsed_seconds": 1.097,
   "history": [
     {
       "epoch": 0,
-      "train_loss": 2.8586167097091675,
-      "train_top1_acc": 0.0703125,
-      "val_loss": 2.9681484699249268,
+      "train_loss": 2.819991409778595,
+      "train_top1_acc": 0.1015625,
+      "val_loss": 2.8674533367156982,
       "val_top1_acc": 0.03125,
       "global_step": 4
     }

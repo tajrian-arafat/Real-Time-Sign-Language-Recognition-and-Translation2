@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -213,13 +214,34 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         default=None,
         help="Max gradient norm (default: training.grad_clip_norm or 1.0 on real data)",
     )
+    parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=None,
+        help="Override batch size (default: config training.batch_size on CUDA, batch_size_low_memory on CPU)",
+    )
+    parser.add_argument(
+        "--num-workers",
+        type=int,
+        default=None,
+        help="DataLoader workers (default: max(1, cpu_count-1) on CPU; config training.num_workers on CUDA)",
+    )
     args = parser.parse_args(argv)
 
     config = load_config()
     training_cfg = config.get("training", {})
     hardware = config.get("hardware", {})
     device = _resolve_device(bool(hardware.get("prefer_cuda", True)))
-    batch_size = _batch_size_for_device(config, device)
+    if args.batch_size is not None:
+        batch_size = int(args.batch_size)
+    else:
+        batch_size = _batch_size_for_device(config, device)
+    if args.num_workers is not None:
+        num_workers = int(args.num_workers)
+    elif device.type == "cpu":
+        num_workers = max(1, (os.cpu_count() or 2) - 1)
+    else:
+        num_workers = int(training_cfg.get("num_workers", 3))
 
     real_data = processed_tensors_ready(config) and not args.force_synthetic
     run_mode = "kaggle_processed" if real_data else "synthetic_smoke"
@@ -233,20 +255,15 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         train_ds = SyntheticLandmarkDataset(128, num_classes)
         val_ds = SyntheticLandmarkDataset(32, num_classes, seed=99)
 
-    train_loader = DataLoader(
-        train_ds,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=0,
-        collate_fn=_collate,
-    )
-    val_loader = DataLoader(
-        val_ds,
-        batch_size=batch_size,
-        shuffle=False,
-        num_workers=0,
-        collate_fn=_collate,
-    )
+    loader_kwargs: dict[str, Any] = {
+        "batch_size": batch_size,
+        "collate_fn": _collate,
+        "num_workers": num_workers,
+    }
+    if num_workers > 0:
+        loader_kwargs["persistent_workers"] = True
+    train_loader = DataLoader(train_ds, shuffle=True, **loader_kwargs)
+    val_loader = DataLoader(val_ds, shuffle=False, **loader_kwargs)
 
     model = build_model_from_config(config, num_classes).to(device)
     label_smoothing = float(training_cfg.get("label_smoothing", 0.1))
@@ -376,6 +393,7 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         "real_data_available": real_data,
         "device": str(device),
         "batch_size": batch_size,
+        "num_workers": num_workers,
         "learning_rate": lr,
         "grad_clip_norm": grad_clip if grad_clip > 0 else None,
         "num_classes": num_classes,
