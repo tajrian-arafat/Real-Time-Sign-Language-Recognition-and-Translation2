@@ -7,6 +7,10 @@ import { ScopeNotice } from "./components/ScopeNotice";
 import { SentenceBar } from "./components/SentenceBar";
 import { VideoUploadControls } from "./components/VideoUploadControls";
 import { INFERENCE } from "./config";
+import {
+  inferenceBackendLabel,
+  useBackendHealth,
+} from "./hooks/useBackendHealth";
 import { useFps } from "./hooks/useFps";
 import { useLandmarkWindowBuffer } from "./hooks/useLandmarkWindowBuffer";
 import { useMediapipeLandmarks } from "./hooks/useMediapipeLandmarks";
@@ -66,6 +70,9 @@ export default function App() {
 
   const { translateWord, translateWords, translateSentence } =
     useTranslationApi();
+
+  const backendHealth = useBackendHealth();
+  const inferenceLabel = inferenceBackendLabel(backendHealth);
 
   useEffect(() => {
     if (!sessionActive) {
@@ -191,7 +198,8 @@ export default function App() {
             Real-Time ASL → Bangla
           </h1>
           <p className="mt-1 text-sm text-slate-400">
-            Browser MediaPipe Tasks → landmark WebSocket → stub ONNX + Bangla REST
+            Browser MediaPipe Tasks → landmark WebSocket → {inferenceLabel} +
+            Bangla REST
             {mockMode ? " (mock mode)" : ""}
           </p>
         </div>
@@ -228,6 +236,7 @@ export default function App() {
             snapshot={snapshot}
             mockMode={mockMode}
             threshold={INFERENCE.confidenceThreshold}
+            connectionState={connectionState}
           />
           <BanglaPanel
             wordGloss={instantGloss}
