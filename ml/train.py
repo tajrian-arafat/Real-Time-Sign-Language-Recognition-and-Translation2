@@ -238,6 +238,12 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
         default=None,
         help="Stop training after this many wall-clock seconds (e.g. six-hour budget)",
     )
+    parser.add_argument(
+        "--early-stopping-patience",
+        type=int,
+        default=None,
+        help="Stop after N epochs without val improvement (default: config training.early_stopping_patience)",
+    )
     args = parser.parse_args(argv)
 
     config = load_config()
@@ -317,7 +323,10 @@ def train_main(argv: list[str] | None = None) -> dict[str, Any]:
     start_epoch = 0
     global_step = 0
     best_val_acc = -1.0
-    patience = int(training_cfg.get("early_stopping_patience", 8))
+    if args.early_stopping_patience is not None:
+        patience = int(args.early_stopping_patience)
+    else:
+        patience = int(training_cfg.get("early_stopping_patience", 8))
     stale_epochs = 0
 
     if args.resume and args.resume.is_file():

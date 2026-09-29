@@ -16,13 +16,37 @@ DEFAULT_REPO = os.environ.get(
 )
 
 
+def _refresh_requested() -> bool:
+    return os.environ.get("SIGN_LANGUAGE_RESTORE_REFRESH", "").lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+
+
+def _extended_checkpoint_present() -> bool:
+    for rel in (
+        "kaggle_extended_v3/best.pt",
+        "kaggle_extended_v2/best.pt",
+        "kaggle_extended_v1/best.pt",
+    ):
+        if (REPO / "models" / rel).is_file():
+            return True
+    return False
+
+
 def main() -> int:
     served_dir = REPO / "models" / "served"
     onnx = served_dir / "model.onnx"
     label_map = served_dir / "label_map.json"
     extended = REPO / "models" / "kaggle_extended_v1" / "best.pt"
 
-    if onnx.is_file() and extended.is_file() and label_map.is_file():
+    if (
+        not _refresh_requested()
+        and onnx.is_file()
+        and label_map.is_file()
+        and _extended_checkpoint_present()
+    ):
         print("restore_served_artifacts: served bundle complete", file=sys.stderr)
         return 0
 
@@ -58,12 +82,16 @@ def main() -> int:
     src_pt = dest / "best.pt"
     src_label = dest / "label_map.json"
     served_dir.mkdir(parents=True, exist_ok=True)
-    if src_onnx.is_file() and not onnx.is_file():
+    if src_onnx.is_file():
         shutil.copy2(src_onnx, onnx)
-    if src_pt.is_file() and not extended.is_file():
-        (REPO / "models" / "kaggle_extended_v1").mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src_pt, extended)
-    _copy_label_map_from_bundle(dest, label_map)
+    if src_pt.is_file():
+        ckpt_dir = REPO / "models" / "kaggle_extended_v3"
+        ckpt_dir.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src_pt, ckpt_dir / "best.pt")
+        if not extended.is_file():
+            (REPO / "models" / "kaggle_extended_v1").mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src_pt, extended)
+    _copy_label_map_from_bundle(dest, label_map, overwrite=True)
 
     report["served_onnx"] = onnx.is_file()
     report["served_label_map"] = label_map.is_file()
@@ -77,13 +105,13 @@ def main() -> int:
     return 0 if report["status"] == "ok" else 1
 
 
-def _copy_label_map_from_bundle(bundle_dir: Path, label_dst: Path) -> None:
+def _copy_label_map_from_bundle(bundle_dir: Path, label_dst: Path, *, overwrite: bool = False) -> None:
     src = bundle_dir / "label_map.json"
     if not src.is_file():
         processed = _processed_label_map_path()
         if processed is not None:
             src = processed
-    if src.is_file() and not label_dst.is_file():
+    if src.is_file() and (overwrite or not label_dst.is_file()):
         label_dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, label_dst)
 
